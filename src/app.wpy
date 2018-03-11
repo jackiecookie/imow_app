@@ -22,7 +22,8 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index'
+      'pages/index',
+      'pages/login'
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -38,7 +39,27 @@ export default class extends wepy.app {
   constructor () {
     super()
     this.use('requestfix')
+    this.use('promisify');
   }
+
+   async onLaunch(param) {
+   var {code}=await wepy.login();
+    let userInfo = await wepy.getUserInfo();
+    console.info(`[auth]${userInfo} sync success `);
+      
+  }
+
+      syncStoreConfig(key) {
+      try {
+        const value = wepy.getStorageSync(key);
+        if (value !== '') {
+          console.info(`[auth]${key} sync success `);
+          wepy.$instance.globalData.auth[key] = value;
+        }
+      } catch (e) {
+        console.warn(`[auth]${key} sync fail `);
+      }
+    }
 }
 
 </script>

@@ -1,13 +1,18 @@
 <template>
   <view>
-      ssssssss
+     <navigator url="/pages/login" hover-class="navigator-hover">跳转到新页面</navigator>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
 
-export default class Index extends wepy.page {}
+export default class Index extends wepy.page {
+ onReady() {
+    
+  }
+   
+}
 </script>
 
 <style lang="scss">

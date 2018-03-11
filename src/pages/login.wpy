@@ -1,0 +1,40 @@
+<template>
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <view class="zan-panel">
+      <logNamefield :options="form_loginName" componentId="form.logNamefield"></logNamefield>
+      <pwdfield :options="form_password" componentId="form.pwdfield"></pwdfield>
+      <view class="zan-btns">
+        <button
+          class="zan-btn zan-btn--danger"
+          formType="submit">登陆</button>
+      </view>
+    </view>
+  </form>
+</template>
+
+<script>
+import wepy from 'wepy'
+import zanField from '../components/zan/zan-field'
+
+export default class Login extends wepy.page {
+  data = {
+    form_loginName: {
+      name: 'loginName',
+      placeholder: '输入阿母账号'
+    },
+    form_password: {
+      name: 'password',
+      placeholder: '输入密码'
+    }
+  };
+  components = {
+    logNamefield: zanField,
+    pwdfield: zanField
+  };
+}
+</script>
+
+<style lang="scss">
+  @import '../styles/zan/panel.scss';
+  @import '../styles/zan/btn.scss';
+</style>
