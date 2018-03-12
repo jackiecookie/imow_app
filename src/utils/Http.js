@@ -1,4 +1,4 @@
-import wepy from 'wepy';
+import wepy from 'wepy'
 
 // HTTP工具类
 export default class http {
@@ -7,15 +7,15 @@ export default class http {
       url: url,
       method: method,
       data: data
-    };
+    }
     if (loading) {
       // Tips.loading();
     }
-    const res = await wepy.request(param);
+    const res = await wepy.request(param)
     if (this.isSuccess(res)) {
-      return res.data.data;
+      return res.data
     } else {
-      throw this.requestException(res);
+      throw this.requestException(res)
     }
   }
 
@@ -23,48 +23,47 @@ export default class http {
    * 判断请求是否成功
    */
   static isSuccess (res) {
-    const wxCode = res.statusCode;
+    const wxCode = res.statusCode
     // 微信请求错误
     if (wxCode !== 200) {
-      return false;
+      return false
     }
-    const wxData = res.data;
-    return !(wxData && wxData.code !== 0);
+    return true
   }
 
   /**
    * 异常
    */
   static requestException (res) {
-    const error = {};
-    error.statusCode = res.statusCode;
-    const wxData = res.data;
-    const serverData = wxData.data;
+    const error = {}
+    error.statusCode = res.statusCode
+    const wxData = res.data
+    const serverData = wxData.data
     if (serverData) {
-      error.serverCode = wxData.code;
-      error.message = serverData.message;
-      error.serverData = serverData;
+      error.serverCode = wxData.code
+      error.message = serverData.message
+      error.serverData = serverData
     }
-    return error;
+    return error
   }
 
   static get (url, data, loading = true) {
-    return this.request('GET', url, data, loading);
+    return this.request('GET', url, data, loading)
   }
 
   static put (url, data, loading = true) {
-    return this.request('PUT', url, data, loading);
+    return this.request('PUT', url, data, loading)
   }
 
   static post (url, data, loading = true) {
-    return this.request('POST', url, data, loading);
+    return this.request('POST', url, data, loading)
   }
 
   static patch (url, data, loading = true) {
-    return this.request('PATCH', url, data, loading);
+    return this.request('PATCH', url, data, loading)
   }
 
   static delete (url, data, loading = true) {
-    return this.request('DELETE', url, data, loading);
+    return this.request('DELETE', url, data, loading)
   }
 }

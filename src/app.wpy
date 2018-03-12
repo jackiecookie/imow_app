@@ -15,6 +15,7 @@ import 'wepy-async-function'
 
 import { setStore } from 'wepy-redux'
 import configStore from './store'
+import auth from './utils/auth'
 
 const store = configStore()
 setStore(store)
@@ -29,37 +30,54 @@ export default class extends wepy.app {
       backgroundTextStyle: 'dark',
       backgroundColor: '#F5F5F5',
       navigationBarBackgroundColor: '#1296db'
-    }
+    },
+    tabBar: {
+      color: '#AEADAD',
+      selectedColor: '#049BFF',
+      backgroundColor: '#fff',
+      borderStyle: 'black',
+      list: [{
+        pagePath: 'pages/index',
+        text: '首页'
+      }, {
+        pagePath: 'pages/index',
+        text: '书架'
+      }, {
+        pagePath: 'pages/index',
+        text: '我的'
+      }]
+    },
+    debug: true
   }
 
   globalData = {
-    userInfo: null
+    auth: {
+      third_session: null
+    }
   }
 
   constructor () {
     super()
     this.use('requestfix')
-    this.use('promisify');
+    this.use('promisify')
   }
 
-   async onLaunch(param) {
-   var {code}=await wepy.login();
-    let userInfo = await wepy.getUserInfo();
-    console.info(`[auth]${userInfo} sync success `);
-      
+  async onLaunch(param) {
+    this.syncStoreConfig('third_session')
+    auth.login()
   }
 
-      syncStoreConfig(key) {
-      try {
-        const value = wepy.getStorageSync(key);
-        if (value !== '') {
-          console.info(`[auth]${key} sync success `);
-          wepy.$instance.globalData.auth[key] = value;
-        }
-      } catch (e) {
-        console.warn(`[auth]${key} sync fail `);
+  syncStoreConfig(key) {
+    try {
+      const value = wepy.getStorageSync(key)
+      if (value !== '') {
+        console.info(`[auth]${key} sync success `)
+        wepy.$instance.globalData.auth[key] = value
       }
+    } catch (e) {
+      console.warn(`[auth]${key} sync fail `)
     }
+  }
 }
 
 </script>
