@@ -37,13 +37,10 @@ export default class Login extends wepy.page {
     async formSubmit() {
      let logNamefield= this.input['form.logNamefield'];
      let pwdfield= this.input['form.pwdfield'];
+     debugger
     }
   }
-  events  = {
-    zanFieldChange(e) {
-      this.inputcb(e);
-    }
-  }
+ 
   mixins = [base, input];
 }
 </script>

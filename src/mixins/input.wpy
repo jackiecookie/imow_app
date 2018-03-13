@@ -53,7 +53,7 @@ export default class input extends wepy.mixin {
       }
       return true
     }
-    inputcb(e) {
+    inputHandle(e) {
       const fieldName = e.componentId
       this.input[fieldName] = e.detail.value
     }
@@ -69,5 +69,10 @@ export default class input extends wepy.mixin {
         this.input[fieldName] = e.detail.value
       }
     };
+     events  = {
+    zanFieldChange(e) {
+      this.inputHandle(e);
+    }
+  }
   }
 </script>
