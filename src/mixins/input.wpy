@@ -54,13 +54,13 @@ export default class input extends wepy.mixin {
       return true
     }
     onInput(e) {
-      const fieldName = e.currentTarget.name
+      const fieldName = e.componentId
       this.input[fieldName] = e.detail.value
     }
     methods = {
       // 处理输入事件
       input(e) {
-        const fieldName = e.currentTarget.name
+        const fieldName = e.componentId
         this.input[fieldName] = e.detail.value
       },
       // 处理单选事件
