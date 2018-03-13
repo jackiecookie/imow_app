@@ -1,15 +1,21 @@
-import {SAVE} from '../types/user'
+import {UpdateUserAction} from '../actions/index'
 import { handleActions } from 'redux-actions'
 
-const defaultUser = {
-  thirdSession: null,
-  displayName: '未绑定',
-  imowUser: false
+const defaultState = {
+  user: {
+    thirdSession: null,
+    displayName: '未绑定',
+    imowUser: false
+  }
 }
 
 export default handleActions({
-  [SAVE] (state, action) {
-    const {user} = action.payload
-    return user
+  [UpdateUserAction] (state, action) {
+    const {key, value} = action.payload
+    console.info(`[dispatch] save : ${key} value : ${value}`)
+    return {
+      ...state,
+      [key]: value
+    }
   }
-}, defaultUser)
+}, defaultState)

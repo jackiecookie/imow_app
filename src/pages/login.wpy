@@ -1,12 +1,12 @@
 <template>
-  <form bindsubmit="formSubmit" bindreset="formReset">
+  <form @submit="formSubmit" bindreset="formReset" >
     <view class="zan-panel">
       <logNamefield :options="form_loginName" componentId="form.logNamefield"></logNamefield>
       <pwdfield :options="form_password" componentId="form.pwdfield"></pwdfield>
       <view class="zan-btns">
         <button
           class="zan-btn zan-btn--danger"
-          formType="submit">登陆</button>
+          formType="submit">登陆并绑定微信号</button>
       </view>
     </view>
   </form>
@@ -15,22 +15,32 @@
 <script>
 import wepy from 'wepy'
 import zanField from '../components/zan/zan-field'
+import base from '../mixins/base'
+import input from '../mixins/input'
 
 export default class Login extends wepy.page {
   data = {
     form_loginName: {
       name: 'loginName',
-      placeholder: '输入阿母账号'
+      placeholder: '输入阿母账号',
+      handleZanFieldChange: this.onInput
     },
     form_password: {
       name: 'password',
-      placeholder: '输入密码'
+      placeholder: '输入密码',
+      handleZanFieldChange: this.onInput
     }
   };
   components = {
     logNamefield: zanField,
     pwdfield: zanField
   };
+  methods = {
+    async formSubmit() {
+      debugger
+    }
+  }
+  mixins = [input, base];
 }
 </script>
 

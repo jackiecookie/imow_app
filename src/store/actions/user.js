@@ -3,7 +3,10 @@ import { createAction } from 'redux-actions'
 
 export const UpdateUserAction = createAction(SAVE, (user) => {
   if (user) {
-    return user
+    return {
+      key: 'user',
+      value: user
+    }
   } else {
 
   }

@@ -25,8 +25,10 @@ export default class auth extends base {
       }
     }
     if (needLogin) {
-      userInfo = this.doLogin()
+      userInfo = await this.doLogin()
     }
+
+    userInfo && store.updateUser(userInfo)
   }
 
   /**

@@ -1,17 +1,23 @@
 <template>
   <view>
      <navigator url="/pages/login" hover-class="navigator-hover">跳转到新页面</navigator>
+     <view>
+       {{user.displayName}}
+     </view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import store from '../store/utils'
+
+@connect({
+  user: store.get('user')
+})
 
 export default class Index extends wepy.page {
- onReady() {
-    
-  }
-   
+
 }
 </script>
 
