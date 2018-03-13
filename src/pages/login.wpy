@@ -1,5 +1,5 @@
 <template>
-  <form @submit="formSubmit" bindreset="formReset" >
+  <form bindsubmit="formSubmit" bindreset="formReset" >
     <view class="zan-panel">
       <logNamefield :options="form_loginName" componentId="form.logNamefield"></logNamefield>
       <pwdfield :options="form_password" componentId="form.pwdfield"></pwdfield>
@@ -22,13 +22,11 @@ export default class Login extends wepy.page {
   data = {
     form_loginName: {
       name: 'loginName',
-      placeholder: '输入阿母账号',
-      handleZanFieldChange: this.onInput
+      placeholder: '输入阿母账号'
     },
     form_password: {
       name: 'password',
-      placeholder: '输入密码',
-      handleZanFieldChange: this.onInput
+      placeholder: '输入密码'
     }
   };
   components = {
@@ -37,10 +35,16 @@ export default class Login extends wepy.page {
   };
   methods = {
     async formSubmit() {
-      debugger
+     let logNamefield= this.input['form.logNamefield'];
+     let pwdfield= this.input['form.pwdfield'];
     }
   }
-  mixins = [input, base];
+  events  = {
+    zanFieldChange(e) {
+      this.inputcb(e);
+    }
+  }
+  mixins = [base, input];
 }
 </script>
 

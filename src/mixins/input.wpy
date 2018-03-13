@@ -53,7 +53,7 @@ export default class input extends wepy.mixin {
       }
       return true
     }
-    onInput(e) {
+    inputcb(e) {
       const fieldName = e.componentId
       this.input[fieldName] = e.detail.value
     }

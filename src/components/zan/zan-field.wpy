@@ -115,7 +115,6 @@ export default class zanField extends wepy.component {
     },
     handleZanFieldChange(event) {
       event.componentId = this.componentId
-
       console.info('[zan:field:change]', event)
 
       return this.$emit('zanFieldChange', event)
