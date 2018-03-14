@@ -3,87 +3,66 @@
     <view class="weui-search-bar__form">
       <view class="weui-search-bar__box">
         <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
-        <input type="text" class="weui-search-bar__input" placeholder="{{placeholder}}" value="{{inputVal}}" focus="{{inputShowed}}" @input="inputTyping" />
-        <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" @tap="clearInput">
-          <icon type="clear" size="14"></icon>
-        </view>
+        <input type="text" class="weui-search-bar__input" placeholder="{{placeholder}}" value="{{inputVal}}" focus="{{inputShowed}}" @input="inputTyping" @blur="showInput(false)" confirm-type="search" @confirm="search"/>
+        <block wx:if="{{inputVal.length > 0}}">
+          <view class="weui-icon-clear" @tap="clearInput">
+            <icon type="clear" size="14"></icon>
+          </view>
+        </block>
       </view>
-      <label class="weui-search-bar__label" hidden="{{inputShowed}}" @tap="showInput">
+      <label class="weui-search-bar__label" hidden="{{inputShowed}}" @tap="showInput(true)">
         <icon class="weui-icon-search" type="search" size="14"></icon>
-        <view class="weui-search-bar__text">{{placeholder}}</view>
+        <view class="weui-search-bar__text">{{computedPlaceholder}}</view>
       </label>
     </view>
-    <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" @tap="hideInput">{{hideText}}</view>
+    <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" @tap="search">搜索</view>
   </view>
-  <view class="search-placeholder"></view>
 </template>
 
 <script>
   import wepy from 'wepy'
+
   export default class SearchBar extends wepy.component {
     props = {
-      back: {},
-      inputVal: {
-        twoWay: true
-      },
       placeholder: {
+        type: String,
         default: '搜索'
       }
-    };
+    }
+
     data = {
-      isBack: false,
-      hideText: '取消',
-      inputShowed: false
-    };
-    onLoad() {
-      if (this.isBack) {
-        this.inputShowed = true
-        this.hideText = '返回'
+      inputShowed: false,
+      inputVal: ''
+    }
+
+    computed = {
+      computedPlaceholder() {
+        return this.inputVal || this.placeholder
       }
     }
-    computed = {
-      isBack() {
-        return this.back == 'true'
-      }
-    };
+
     methods = {
-      showInput: function () {
-        this.inputShowed = true
+      showInput (isShow) {
+        this.inputShowed = isShow === 'true'
+        this.$apply()
       },
-      hideInput: function () {
-        if (this.isBack) {
-          this.$emit('back')
-        } else {
-          this.inputVal = ''
-          this.inputShowed = false
-          this.$emit('input', null)
+      search () {
+        const params = {
+          key_word: this.inputVal || this.placeholder
         }
+        wx.navigateTo({
+          url: `/pages/main/list?params=${JSON.stringify(params)}`
+        })
       },
-      clearInput: function () {
-        this.inputVal = ''
-        this.$emit('input', null)
+      clearInput (cb) {
+        setTimeout(() => {
+          this.inputVal = ''
+          this.$apply()
+        })
       },
-      inputTyping: function (e) {
-        const input = e.detail.value
-        this.inputVal = input
-        this.$emit('input', input)
+      inputTyping (e) {
+        this.inputVal = e.detail.value
       }
-    };
-    events = {}
+    }
   }
 </script>
-
-<style lang="scss">
-  .weui-search-bar{
-    position: fixed;
-    width: 100%;
-    z-index: 100;
-    top: 0;
-  }
-  .search-placeholder{
-    height: 48px;
-    width: 100%;
-  }
-
-
-</style>
