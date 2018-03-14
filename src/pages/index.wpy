@@ -31,6 +31,7 @@ export default class Index extends wepy.page {
         {title: '车找人', image: '/images/IMG_1385.JPG'},
         {title: '车找货', image: '/images/IMG_1385.JPG'},
         {title: '货找人', image: '/images/IMG_1385.JPG'}
+
     ]
   }
 }

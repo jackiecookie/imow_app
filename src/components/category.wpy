@@ -57,10 +57,12 @@
 <style type="scss">
 @import "../styles/zan/helper.scss";
 
+
 .category{
   position: relative;
   width: 100%;
   border-bottom: 20rpx solid rgb(151, 200, 212);
+
   font-size: 14px;
   background: #fff;
 }
