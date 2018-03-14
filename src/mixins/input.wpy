@@ -2,6 +2,7 @@
   import wepy from 'wepy'
 import Lang from '../utils/Lang'
 import v from '../utils/Validate'
+import Tip from '../utils/Tips'
 export default class input extends wepy.mixin {
     data = {
       input: {}
@@ -20,7 +21,8 @@ export default class input extends wepy.mixin {
     }
     // 提示错误（调用FormTips）
     tips(message) {
-      this.$invoke('Tips', 'show', message)
+      Tip.error(message)
+      // this.$invoke('Tips', 'show', message)
     }
     // 校验
     check(rules) {
@@ -69,10 +71,10 @@ export default class input extends wepy.mixin {
         this.input[fieldName] = e.detail.value
       }
     };
-     events  = {
-    zanFieldChange(e) {
-      this.inputHandle(e);
+    events = {
+      zanFieldChange(e) {
+        this.inputHandle(e)
+      }
     }
-  }
   }
 </script>

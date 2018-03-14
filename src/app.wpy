@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
 .container {
   height: 100%;
   display: flex;
@@ -15,7 +15,8 @@ import 'wepy-async-function'
 
 import { setStore } from 'wepy-redux'
 import configStore from './store'
-import auth from './utils/auth'
+import auth from './api/auth'
+import Tips from './utils/Tips'
 
 const store = configStore()
 setStore(store)
@@ -63,8 +64,10 @@ export default class extends wepy.app {
   }
 
   async onLaunch(param) {
+    Tips.loading()
     this.syncStoreConfig('third_session')
-    auth.login()
+    await auth.login()
+    Tips.loaded()
   }
 
   syncStoreConfig(key) {

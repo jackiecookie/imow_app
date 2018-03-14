@@ -1,9 +1,6 @@
 <template>
   <view>
-     <navigator url="/pages/login" hover-class="navigator-hover">跳转到新页面</navigator>
-     <view>
-       {{user.displayName}}
-     </view>
+    <Swiper :list.sync="swipers" height="280"></Swiper>
   </view>
 </template>
 
@@ -11,13 +8,22 @@
 import wepy from 'wepy'
 import { connect } from 'wepy-redux'
 import store from '../store/utils'
+import Swiper from '../components/swiper'
 
 @connect({
   user: store.get('user')
 })
 
 export default class Index extends wepy.page {
-
+  components = {
+    Swiper: Swiper
+  };
+  data = {
+    swipers: [
+        {image: '/images/icons/error.png', url: '/pages/login'},
+        {image: '/images/icons/alert.png', url: '/pages/login'}
+    ]
+  }
 }
 </script>
 

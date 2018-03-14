@@ -76,6 +76,7 @@
       name="{{ options.name || componentId || '' }}"
       value="{{ options.value }}"
       placeholder="{{ options.placeholder }}"
+      password = "{{ options.password }}"
       class="zan-field__input zan-cell__bd {{ options.right ? 'zan-field__input--right' : '' }}"
       placeholder-class="zan-field__placeholder"
       bindinput="handleZanFieldChange"
@@ -100,7 +101,8 @@ export default class zanField extends wepy.component {
         mode: 'wrapped',
         title: '消费总额',
         inputType: 'number',
-        placeholder: '询问收银员后输入'
+        placeholder: '询问收银员后输入',
+        password: false
       }
     },
     componentId: String

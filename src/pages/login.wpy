@@ -17,6 +17,8 @@ import wepy from 'wepy'
 import zanField from '../components/zan/zan-field'
 import base from '../mixins/base'
 import input from '../mixins/input'
+import router from '../mixins/router'
+import memberApi from '../api/member'
 
 export default class Login extends wepy.page {
   data = {
@@ -26,7 +28,8 @@ export default class Login extends wepy.page {
     },
     form_password: {
       name: 'password',
-      placeholder: '输入密码'
+      placeholder: '输入密码',
+      password: true
     }
   };
   components = {
@@ -35,13 +38,35 @@ export default class Login extends wepy.page {
   };
   methods = {
     async formSubmit() {
-     let logNamefield= this.input['form.logNamefield'];
-     let pwdfield= this.input['form.pwdfield'];
-     debugger
+      let logNameVal = this.input['form.logNamefield']
+      let pwdVal = this.input['form.pwdfield']
+      const rules = [
+        {
+          value: logNameVal,
+          method: 'required',
+          message: '账号不能为空'
+        },
+        {
+          value: logNameVal,
+          method: 'tel',
+          message: '手机号码不正确'
+        },
+        {
+          value: pwdVal,
+          method: 'required',
+          message: '请输入密码'
+        }
+      ]
+      if (!this.check(rules)) {
+        return false
+      }
+      if (await memberApi.login(logNameVal, pwdVal)) {
+        this.routeToIndex()
+      }
     }
   }
- 
-  mixins = [base, input];
+
+  mixins = [base, input, router];
 }
 </script>
 

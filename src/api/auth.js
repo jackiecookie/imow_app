@@ -27,45 +27,8 @@ export default class auth extends base {
     if (needLogin) {
       userInfo = await this.doLogin()
     }
-
-    userInfo && store.updateUser(userInfo)
-  }
-
-  /**
-   * 获取用户信息
-   */
-  static async user(param = {block: false, redirect: false}, userInfo) {
-    try {
-      // 检查
-      if (this.hasConfig('user')) {
-       // store.save('user', this.getConfig('user'));
-        return true
-      }
-      console.info('[auth] user check fail')
-      // 重新登录
-      await this.doLogin()
-      // 获取用户信息
-      const rawUser = userInfo != null ? userInfo : await wepy.getUserInfo()
-      // 检查是否通过
-      // await this.checkUserInfo(rawUser);
-      // 解密信息
-      const {user} = await this.decodeUserInfo(rawUser)
-      // 保存登录信息
-      await this.setConfig('user', user)
-     // store.save('user', user);
-      return true
-    } catch (error) {
-      console.error('[auth] 授权失败', error)
-      if (param.block) {
-        const url = `/pages/home/login?redirect=${param.redirect}`
-        if (param.redirect) {
-          WxUtils.backOrRedirect(url)
-        } else {
-          WxUtils.backOrNavigate(url)
-        }
-      }
-      return false
-    }
+    await this.loginProsses(userInfo)
+    // userInfo && store.updateUser(userInfo)
   }
 
   /**
@@ -78,11 +41,17 @@ export default class auth extends base {
     try {
       const result = await this.post(url, {loginCode: code})
       console.info(`[auth] login complete :${result.thirdSession} `)
-      await this.setConfig('third_session', result.thirdSession)
+      // await this.setConfig('third_session', result.thirdSession)
       return result
     } catch (error) {
-      console.log(error)
       console.error(`[auth] 登录 error:${error}`)
+    }
+  }
+
+  static async loginProsses(result) {
+    if (result) {
+      await this.setConfig('third_session', result.thirdSession)
+      store.updateUser(result)
     }
   }
 

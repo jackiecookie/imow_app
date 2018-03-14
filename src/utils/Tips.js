@@ -104,17 +104,18 @@ export default class Tips {
    */
 
   static error (title, onHide) {
+    const duration = 500
     wx.showToast({
       title: title,
       image: '/images/icons/error.png',
       mask: true,
-      duration: 500
+      duration: duration
     })
     // 隐藏结束回调
     if (onHide) {
       setTimeout(() => {
         onHide()
-      }, 500)
+      }, duration)
     }
   }
 
