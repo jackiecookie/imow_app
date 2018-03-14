@@ -1,6 +1,7 @@
 <template>
   <view>
     <Swiper :list.sync="swipers" height="280"></Swiper>
+    <Category :list.sync="categorys" col="4"></Category>
   </view>
 </template>
 
@@ -9,6 +10,7 @@ import wepy from 'wepy'
 import { connect } from 'wepy-redux'
 import store from '../store/utils'
 import Swiper from '../components/swiper'
+import Category from '../components/category'
 
 @connect({
   user: store.get('user')
@@ -16,12 +18,19 @@ import Swiper from '../components/swiper'
 
 export default class Index extends wepy.page {
   components = {
-    Swiper: Swiper
+    Swiper: Swiper,
+    Category: Category
   };
   data = {
     swipers: [
-        {image: '/images/icons/error.png', url: '/pages/login'},
-        {image: '/images/icons/alert.png', url: '/pages/login'}
+        {image: '/images/IMG_1385.JPG', url: '/pages/login'},
+        {image: '/images/IMG_1385.JPG', url: '/pages/login'}
+    ],
+    categorys: [
+        {title: '今', image: '/images/IMG_1385.JPG'},
+        {title: '晚', image: '/images/IMG_1385.JPG'},
+        {title: '吃', image: '/images/IMG_1385.JPG'},
+        {title: '鸡', image: '/images/IMG_1385.JPG'}
     ]
   }
 }
