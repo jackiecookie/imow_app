@@ -1,5 +1,6 @@
 <template>
   <view>
+    <SearchBar :placeholder="searchText"></SearchBar>
     <Swiper :list.sync="swipers" height="280"></Swiper>
     <Category :list.sync="categorys" col="4"></Category>
   </view>
@@ -11,6 +12,7 @@ import { connect } from 'wepy-redux'
 import store from '../store/utils'
 import Swiper from '../components/swiper'
 import Category from '../components/category'
+import SearchBar from '../components/search_bar'
 
 @connect({
   user: store.get('user')
@@ -19,9 +21,11 @@ import Category from '../components/category'
 export default class Index extends wepy.page {
   components = {
     Swiper: Swiper,
-    Category: Category
+    Category: Category,
+    SearchBar: SearchBar
   };
   data = {
+    searchText: '搜索内容',
     swipers: [
         {image: '/images/IMG_1385.JPG', url: '/pages/login'},
         {image: '/images/IMG_1385.JPG', url: '/pages/login'}

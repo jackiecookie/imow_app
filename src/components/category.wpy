@@ -23,7 +23,7 @@
   import wepy from 'wepy'
   import Lang from '../utils/Lang.js'
 
-  export default class SearchBar extends wepy.component {
+  export default class category extends wepy.component {
     props = {
       list: {
         type: Object,
