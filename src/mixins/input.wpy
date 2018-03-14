@@ -22,7 +22,6 @@ export default class input extends wepy.mixin {
     // 提示错误（调用FormTips）
     tips(message) {
       Tip.error(message)
-      // this.$invoke('Tips', 'show', message)
     }
     // 校验
     check(rules) {
