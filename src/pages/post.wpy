@@ -1,0 +1,116 @@
+<template>
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <view class="zan-panel-title">要求描述</view>
+    <view class="zan-panel">
+      <detailField :options="form_detail" componentId="form_detail"></detailField>
+    </view>
+    <view class="zan-panel-title">信息</view>
+    <view class="zan-panel">
+      <!-- 起始地点 -->
+      <startPlacefield :options="form_startPlace" componentId="form_startPlace"></startPlacefield>
+      <!-- 目标地点 -->
+      <endPlacefield :options="form_endPlace" componentId="form_endPlace"></endPlacefield>
+      <!-- ------------------------ 出发日期 ---------------------------- -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">出发日期</view>
+        <picker mode="date" class="zan-field__input zan-cell__bd" value="{{ dateTimeOption.dataVal }}">
+          <view class="picker zan-field__input">
+          </view>
+        </picker>
+      </view>
+      <!-- ------------------------ 出发日期 ---------------------------- -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">出发时间</view>
+        <picker mode="time" class="zan-field__input zan-cell__bd" value="{{ dateTimeOption.timeVal }}">
+          <view class="picker zan-field__input">
+          </view>
+        </picker>
+      </view>
+      <!-- ------------------------ 出发时间 ---------------------------- -->
+    </view>
+
+    <view class="zan-panel-title">联系人</view>
+    <view class="zan-panel">
+      <nameField :options="form_name" componentId="form_name"></nameField>
+      <mobileField :options="form_mobile" componentId="form_mobile"></mobileField>
+    </view>
+
+    <view class="zan-btns">
+      <button class="zan-btn zan-btn--danger" formType="submit">立即发布</button>
+    </view>
+  </form>
+</template>
+
+<script>
+import wepy from 'wepy'
+import zanField from '../components/zan/zan-field'
+import base from '../mixins/base'
+import input from '../mixins/input'
+
+export default class Post extends wepy.page {
+  data = {
+    dateTimeOption: {
+      dataVal: 'YYYY-MM-DD',
+      timeVal: 'hh:mm'
+    },
+    form_detail: {
+      name: 'detail',
+      placeholder: '请详细描述你的要求',
+      type: 'textarea'
+    },
+    form_startPlace: {
+      name: 'startPlace',
+      title: '出发地'
+    },
+    form_endPlace: {
+      name: 'endPlace',
+      title: '目的地'
+    },
+    form_name: {
+      name: 'name',
+      title: '姓名'
+    },
+    form_mobile: {
+      name: 'mobile',
+      title: '手机号码'
+    }
+  };
+  components = {
+    detailField: zanField,
+    startPlacefield: zanField,
+    endPlacefield: zanField,
+    nameField: zanField,
+    mobileField: zanField
+  };
+  methods = {
+    async formSubmit() {}
+  };
+  events = {
+    zanFieldFocus(evt) {
+      const self = this
+      const componentId = evt.componentId
+      // 起始地选当前位置
+      if (
+        componentId === 'form_startPlace' ||
+        componentId === 'form_endPlace'
+      ) {
+        wx.chooseLocation({
+          complete: locationResult => {
+            if (locationResult.address) {
+              self[componentId].value = locationResult.address
+            }
+            evt.$apply()
+          }
+        })
+      }
+    }
+  };
+
+  mixins = [base, input];
+}
+</script>
+
+<style lang="scss">
+@import '../styles/zan/panel.scss';
+@import '../styles/zan/btn.scss';
+</style>

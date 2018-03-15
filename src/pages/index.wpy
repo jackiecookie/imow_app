@@ -17,7 +17,6 @@ import SearchBar from '../components/search_bar'
 @connect({
   user: store.get('user')
 })
-
 export default class Index extends wepy.page {
   components = {
     Swiper: Swiper,
@@ -27,20 +26,19 @@ export default class Index extends wepy.page {
   data = {
     searchText: '搜索内容',
     swipers: [
-        {image: '/images/IMG_1385.JPG', url: '/pages/login'},
-        {image: '/images/IMG_1385.JPG', url: '/pages/login'}
+      { image: '/images/IMG_1385.JPG', url: '/pages/login' },
+      { image: '/images/IMG_1385.JPG', url: '/pages/login' }
     ],
     categorys: [
-        {title: '人找车', image: '/images/IMG_1385.JPG'},
-        {title: '车找人', image: '/images/IMG_1385.JPG'},
-        {title: '车找货', image: '/images/IMG_1385.JPG'},
-        {title: '货找人', image: '/images/IMG_1385.JPG'}
-
+      { title: '人找车', image: '/images/IMG_1385.JPG' },
+      { title: '车找人', image: '/images/IMG_1385.JPG' },
+      { title: '车找货', image: '/images/IMG_1385.JPG' },
+      { title: '货找人', image: '/images/IMG_1385.JPG' }
     ]
-  }
+  };
 }
 </script>
 
 <style lang="scss">
-  
+
 </style>

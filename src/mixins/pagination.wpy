@@ -4,7 +4,7 @@ import Tips from '../utils/Tips'
 
 /**
  * 分页通用方法
-*/
+ */
 export default class pagination extends wepy.mixin {
   config = {};
   components = {};
@@ -15,10 +15,10 @@ export default class pagination extends wepy.mixin {
     isPageEmpty: false,
     isPageReachBottom: false
   };
-    /**
-     * 下一页
-     */
-  async next () {
+  /**
+   * 下一页
+   */
+  async next() {
     try {
       if (this.page.reachBottom) {
         return
@@ -39,17 +39,17 @@ export default class pagination extends wepy.mixin {
     }
   }
 
-    /**
-     * 到达底部
-     */
-  async onReachBottom () {
+  /**
+   * 到达底部
+   */
+  async onReachBottom() {
     await this.next()
-  };
+  }
 
-    /**
-     * 重新加载
-     */
-  async reload () {
+  /**
+   * 重新加载
+   */
+  async reload() {
     if (this.page && this.page.reset) {
       this.page.reset()
       await this.next()
@@ -57,18 +57,18 @@ export default class pagination extends wepy.mixin {
     }
   }
 
-    /**
-     * 下拉刷新
-     */
-  async onPullDownRefresh () {
+  /**
+   * 下拉刷新
+   */
+  async onPullDownRefresh() {
     await this.reload()
   }
 
-    /**
-     * 更新列表（外部事件）
-     */
+  /**
+   * 更新列表（外部事件）
+   */
   async update() {
     await this.reload()
-  };
   }
+}
 </script>

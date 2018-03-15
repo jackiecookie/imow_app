@@ -4,13 +4,13 @@
 
       <navigator wx:if="{{item.url}}" url="{{item.url}}" class="category-item" style="width:{{style_width}}">
         <view class="category-icon-wrapper">
-          <image src="{{item.image}}" class="category-icon" mode="aspectFit"/>
+          <image src="{{item.image}}" class="category-icon" mode="aspectFit" />
         </view>
         <view class="category-text">{{item.title}}</view>
       </navigator>
       <view wx:else class="category-item" style="width:{{style_width}}">
         <view class="category-icon-wrapper">
-          <image src="{{item.image}}" class="category-icon" mode="aspectFit"/>
+          <image src="{{item.image}}" class="category-icon" mode="aspectFit" />
         </view>
         <view class="category-text">{{item.title}}</view>
       </view>
@@ -20,45 +20,42 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import Lang from '../utils/Lang.js'
+import wepy from 'wepy'
+import Lang from '../utils/Lang.js'
 
-  export default class category extends wepy.component {
-    props = {
-      list: {
-        type: Object,
-        default: []
-      },
-      col: {
-        type: [String, Number],
-        default: 4
-      }
+export default class category extends wepy.component {
+  props = {
+    list: {
+      type: Object,
+      default: []
+    },
+    col: {
+      type: [String, Number],
+      default: 4
     }
+  };
 
-    data = {
-    }
+  data = {};
 
-    computed = {
-      style_width() {
-        const col = this.col
-        return this.getPercent(Lang.isNumber(+col) ? 1 / (+col) : 0.25)
-      }
+  computed = {
+    style_width() {
+      const col = this.col
+      return this.getPercent(Lang.isNumber(+col) ? 1 / +col : 0.25)
     }
+  };
 
-    methods = {
-    }
+  methods = {};
 
-    getPercent(num) {
-      return Lang.isNumber(num) ? `${num * 100}%` : '0%'
-    }
+  getPercent(num) {
+    return Lang.isNumber(num) ? `${num * 100}%` : '0%'
   }
+}
 </script>
 
 <style type="scss">
-@import "../styles/zan/helper.scss";
+@import '../styles/zan/helper.scss';
 
-
-.category{
+.category {
   position: relative;
   width: 100%;
   border-bottom: 20rpx solid rgb(151, 200, 212);
@@ -66,27 +63,27 @@
   font-size: 14px;
   background: #fff;
 }
-.category-item{
+.category-item {
   float: left;
   padding: 1.2em 0;
   text-align: center;
   overflow: hidden;
 }
-.category-icon-wrapper{
+.category-icon-wrapper {
   position: relative;
   width: 50%;
   height: 0;
   margin: auto;
   padding-bottom: 50%;
 }
-.category-icon{
+.category-icon {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
 }
-.category-text{
+.category-text {
   color: #999;
 }
 </style>

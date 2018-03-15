@@ -45,6 +45,10 @@
   font-size: 14px;
 }
 
+.zan-cell__text {
+   min-height: 62px;
+}
+
 .zan-field__placeholder {
   font-size: 14px;
 }
@@ -64,7 +68,7 @@
       name="{{ options.name || componentId || '' }}"
       value="{{ options.value }}"
       placeholder="{{ options.placeholder }}"
-      class="zan-field__input zan-cell__bd {{ options.right ? 'zan-field__input--right' : '' }}"
+      class="zan-cell__text zan-field__input zan-cell__bd {{ options.right ? 'zan-field__input--right' : '' }}"
       placeholder-class="zan-field__placeholder"
       bindinput="handleZanFieldChange"
       bindfocus="handleZanFieldFocus"
@@ -108,6 +112,12 @@ export default class zanField extends wepy.component {
     componentId: String
   }
   data = {}
+  bindEvent(event) {
+    event.componentId = this.componentId
+    event.$apply = () => {
+      this.$apply()
+    }
+  }
   methods = {
     clear() {
       this.options.value = '  '
@@ -115,15 +125,16 @@ export default class zanField extends wepy.component {
       this.options.value = ''
       this.$apply()
     },
+
     handleZanFieldChange(event) {
-      event.componentId = this.componentId
+      this.bindEvent(event)
       console.info('[zan:field:change]', event)
 
       return this.$emit('zanFieldChange', event)
     },
 
     handleZanFieldFocus(event) {
-      event.componentId = this.componentId
+      this.bindEvent(event)
 
       console.info('[zan:field:focus]', event)
 
@@ -131,7 +142,7 @@ export default class zanField extends wepy.component {
     },
 
     handleZanFieldBlur(event) {
-      event.componentId = this.componentId
+      this.bindEvent(event)
 
       console.info('[zan:field:blur]', event)
 

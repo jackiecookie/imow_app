@@ -1,12 +1,10 @@
 <template>
-  <form bindsubmit="formSubmit" bindreset="formReset" >
+  <form bindsubmit="formSubmit" bindreset="formReset">
     <view class="zan-panel">
       <logNamefield :options="form_loginName" componentId="form.logNamefield"></logNamefield>
       <pwdfield :options="form_password" componentId="form.pwdfield"></pwdfield>
       <view class="zan-btns">
-        <button
-          class="zan-btn zan-btn--danger"
-          formType="submit">登陆并绑定微信号</button>
+        <button class="zan-btn zan-btn--danger" formType="submit">登陆并绑定微信号</button>
       </view>
     </view>
   </form>
@@ -64,13 +62,13 @@ export default class Login extends wepy.page {
         this.routeToIndex()
       }
     }
-  }
+  };
 
   mixins = [base, input, router];
 }
 </script>
 
 <style lang="scss">
-  @import '../styles/zan/panel.scss';
-  @import '../styles/zan/btn.scss';
+@import '../styles/zan/panel.scss';
+@import '../styles/zan/btn.scss';
 </style>

@@ -28,7 +28,8 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
-      'pages/login'
+      'pages/login',
+      'pages/post'
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -44,8 +45,8 @@ export default class extends wepy.app {
         pagePath: 'pages/index',
         text: '首页'
       }, {
-        pagePath: 'pages/index',
-        text: '书架'
+        pagePath: 'pages/post',
+        text: '发布'
       }, {
         pagePath: 'pages/index',
         text: '我的'
@@ -67,10 +68,10 @@ export default class extends wepy.app {
   }
 
   async onLaunch(param) {
-    Tips.loading()
-    this.syncStoreConfig('third_session')
-    await auth.login()
-    Tips.loaded()
+    // Tips.loading()
+    // this.syncStoreConfig('third_session')
+    // await auth.login()
+    // Tips.loaded()
   }
 
   syncStoreConfig(key) {

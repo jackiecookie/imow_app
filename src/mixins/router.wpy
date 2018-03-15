@@ -1,23 +1,22 @@
 <script>
-  import wepy from 'wepy'
+import wepy from 'wepy'
 
 /**
  * 分页通用方法
  */
 export default class router extends wepy.mixin {
-    /**
-     * 跳转到首页
-     */
-    routeToIndex () {
-      this.$root.$switch(`/pages/index`)
-    }
-  
-    methods = {
-      routeToIndex() {
-        this.routeToIndex()
-      }
-  
-    };
-    events = {};
+  /**
+   * 跳转到首页
+   */
+  routeToIndex() {
+    this.$root.$switch(`/pages/index`)
   }
+
+  methods = {
+    routeToIndex() {
+      this.routeToIndex()
+    }
+  };
+  events = {};
+}
 </script>
