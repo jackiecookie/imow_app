@@ -13,16 +13,18 @@
       <!-- ------------------------ 出发日期 ---------------------------- -->
       <view class="zan-cell zan-field">
         <view class="zan-cell__hd zan-field__title">出发日期</view>
-        <picker mode="date" class="zan-field__input zan-cell__bd" value="{{ dateTimeOption.dataVal }}">
+        <picker mode="date" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.dataFormat }}" bindchange="dateTimeChange" name="startDate" >
           <view class="picker zan-field__input">
+            {{ dateTimeObj.date }}
           </view>
         </picker>
       </view>
       <!-- ------------------------ 出发日期 ---------------------------- -->
       <view class="zan-cell zan-field">
         <view class="zan-cell__hd zan-field__title">出发时间</view>
-        <picker mode="time" class="zan-field__input zan-cell__bd" value="{{ dateTimeOption.timeVal }}">
+        <picker mode="time" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.timeFormat }}"  bindchange="dateTimeChange" name="startTime">
           <view class="picker zan-field__input">
+             {{ dateTimeObj.time }}
           </view>
         </picker>
       </view>
@@ -49,9 +51,11 @@ import input from '../mixins/input'
 
 export default class Post extends wepy.page {
   data = {
-    dateTimeOption: {
-      dataVal: 'YYYY-MM-DD',
-      timeVal: 'hh:mm'
+    dateTimeObj: {
+      dataFormat: 'YYYY-MM-DD',
+      timeFormat: 'hh:mm',
+      date: '',
+      time: ''
     },
     form_detail: {
       name: 'detail',
@@ -60,11 +64,16 @@ export default class Post extends wepy.page {
     },
     form_startPlace: {
       name: 'startPlace',
-      title: '出发地'
+      title: '出发地',
+      latitude: 0,
+      longitude: 0
+
     },
     form_endPlace: {
       name: 'endPlace',
-      title: '目的地'
+      title: '目的地',
+      latitude: 0,
+      longitude: 0
     },
     form_name: {
       name: 'name',
@@ -82,9 +91,6 @@ export default class Post extends wepy.page {
     nameField: zanField,
     mobileField: zanField
   };
-  methods = {
-    async formSubmit() {}
-  };
   events = {
     zanFieldFocus(evt) {
       const self = this
@@ -98,11 +104,24 @@ export default class Post extends wepy.page {
           complete: locationResult => {
             if (locationResult.address) {
               self[componentId].value = locationResult.address
+              self[componentId].latitude = locationResult.latitude
+              self[componentId].longitude = locationResult.longitude
             }
             evt.$apply()
           }
         })
       }
+    }
+  };
+  methods = {
+    dateTimeChange(evt) {
+      const val = evt.detail.value
+      const isTime = val.indexOf(':') > -1
+      const dataKey = isTime ? 'time' : 'date'
+      this.dateTimeObj[dataKey] = val
+    },
+    async formSubmit() {
+
     }
   };
 
