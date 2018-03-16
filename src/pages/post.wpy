@@ -6,25 +6,50 @@
     </view>
     <view class="zan-panel-title">信息</view>
     <view class="zan-panel">
-      <!-- 起始地点 -->
+      <!-- 起始地点 
       <startPlacefield :options="form_startPlace" componentId="form_startPlace"></startPlacefield>
-      <!-- 目标地点 -->
+      目标地点
       <endPlacefield :options="form_endPlace" componentId="form_endPlace"></endPlacefield>
+       -->
+      <!-- ------------------------ 出发地点 ---------------------------- -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">出发地点</view>
+        <picker mode="region" class="zan-field__input zan-cell__bd" value="{{ startRegion }}" bindchange="startRegionChange" name="startPlace" custom-item="{{customItem}}">
+          <view class="picker zan-field__input">
+            {{ startRegion[0]!=='全部'?startRegion[0]:'' }} {{ startRegion[1]!=='全部'?startRegion[1]:'' }} {{  startRegion[2]!=='全部'?startRegion[2]:'' }}
+          </view>
+        </picker>
+      </view>
+      <!-- ------------------------ 出发地点 ---------------------------- -->
+
+      <!-- ------------------------ 目的地 ---------------------------- -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">目的地</view>
+        <picker mode="region" class="zan-field__input zan-cell__bd" value="{{ endRegion }}" bindchange="endRegionChange" name="endPlace" custom-item="{{customItem}}">
+          <view class="picker zan-field__input">
+            {{ endRegion[0]!=='全部'?endRegion[0]:'' }} {{ endRegion[1]!=='全部'?endRegion[1]:'' }} {{ endRegion[2]!=='全部'?endRegion[2]:''}}
+          </view>
+        </picker>
+      </view>
+      <!-- ------------------------ 目的地 ---------------------------- -->
+
       <!-- ------------------------ 出发日期 ---------------------------- -->
       <view class="zan-cell zan-field">
         <view class="zan-cell__hd zan-field__title">出发日期</view>
-        <picker mode="date" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.dataFormat }}" bindchange="dateTimeChange" name="startDate" >
+        <picker mode="date" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.dataFormat }}" bindchange="dateTimeChange" name="startDate">
           <view class="picker zan-field__input">
             {{ dateTimeObj.date }}
           </view>
         </picker>
       </view>
       <!-- ------------------------ 出发日期 ---------------------------- -->
+
+       <!-- ------------------------ 出发时间 ---------------------------- -->
       <view class="zan-cell zan-field">
         <view class="zan-cell__hd zan-field__title">出发时间</view>
-        <picker mode="time" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.timeFormat }}"  bindchange="dateTimeChange" name="startTime">
+        <picker mode="time" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.timeFormat }}" bindchange="dateTimeChange" name="startTime">
           <view class="picker zan-field__input">
-             {{ dateTimeObj.time }}
+            {{ dateTimeObj.time }}
           </view>
         </picker>
       </view>
@@ -64,19 +89,21 @@ export default class Post extends wepy.page {
       placeholder: '请详细描述你的要求',
       type: 'textarea'
     },
-    form_startPlace: {
-      name: 'startPlace',
-      title: '出发地',
-      latitude: 0,
-      longitude: 0
-
-    },
-    form_endPlace: {
-      name: 'endPlace',
-      title: '目的地',
-      latitude: 0,
-      longitude: 0
-    },
+    startRegion: [],
+    endRegion: [],
+    customItem: '全部',
+    // form_startPlace: {
+    //   name: 'startPlace',
+    //   title: '出发地',
+    //   latitude: 0,
+    //   longitude: 0
+    // },
+    // form_endPlace: {
+    //   name: 'endPlace',
+    //   title: '目的地',
+    //   latitude: 0,
+    //   longitude: 0
+    // },
     form_name: {
       name: 'name',
       title: '姓名'
@@ -94,30 +121,45 @@ export default class Post extends wepy.page {
     nameField: zanField,
     mobileField: zanField
   };
-  events = {
-    zanFieldFocus(evt) {
-      const self = this
-      const componentId = evt.componentId
-      // 起始地选当前位置
-      if (
-        componentId === 'form_startPlace' ||
-        componentId === 'form_endPlace'
-      ) {
-        wx.chooseLocation({
-          complete: locationResult => {
-            if (locationResult.address) {
-              self[componentId].value = locationResult.address
-              self[componentId].latitude = locationResult.latitude
-              self[componentId].longitude = locationResult.longitude
-            }
-            evt.$apply()
-            return false
-          }
-        })
-      }
-    }
-  };
+  // events = {
+  //   zanFieldFocus(evt) {
+  //     const self = this
+  //     const componentId = evt.componentId
+  //     // 起始地选当前位置
+  //     if (
+  //       componentId === 'form_startPlace' ||
+  //       componentId === 'form_endPlace'
+  //     ) {
+  //       wx.chooseLocation({
+  //         complete: locationResult => {
+  //           if (locationResult.address) {
+  //             self[componentId].value = locationResult.address
+  //             self[componentId].latitude = locationResult.latitude
+  //             self[componentId].longitude = locationResult.longitude
+  //           }
+  //           evt.$apply()
+  //           return false
+  //         }
+  //       })
+  //     }
+  //   }
+  // };
   methods = {
+    showRegion(region) {
+      if (region && region[0] && region[1] && region[2]) {
+        return region.join(',')
+        // return `${region[0]},${region[1]},${region[2]}`
+      }
+      return ''
+    },
+    startRegionChange(evt) {
+      this.startRegion = evt.detail.value
+      this.$apply()
+    },
+    endRegionChange(evt) {
+      this.endRegion = evt.detail.value
+      this.$apply()
+    },
     dateTimeChange(evt) {
       const val = evt.detail.value
       const isTime = val.indexOf(':') > -1

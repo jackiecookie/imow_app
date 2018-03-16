@@ -83,10 +83,10 @@ export default class extends wepy.app {
   }
 
   async onLaunch(param) {
-    Tips.loading()
-    this.syncStoreConfig('third_session')
-    await auth.login()
-    Tips.loaded()
+    // Tips.loading()
+    // this.syncStoreConfig('third_session')
+    // await auth.login()
+    // Tips.loaded()
   }
 
   syncStoreConfig(key) {
