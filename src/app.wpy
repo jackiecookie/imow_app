@@ -65,13 +65,28 @@ export default class extends wepy.app {
     super()
     this.use('requestfix')
     this.use('promisify')
+    this.intercept('request', {
+      config (p) {
+        p.header = this.createAuthHeader()
+        return p
+      }
+    })
+  }
+
+  createAuthHeader () {
+    const thridSession = auth.getConfig('third_session')
+    const header = {}
+    if (thridSession) {
+      header['third_session'] = thridSession
+    }
+    return header
   }
 
   async onLaunch(param) {
-    // Tips.loading()
-    // this.syncStoreConfig('third_session')
-    // await auth.login()
-    // Tips.loaded()
+    Tips.loading()
+    this.syncStoreConfig('third_session')
+    await auth.login()
+    Tips.loaded()
   }
 
   syncStoreConfig(key) {

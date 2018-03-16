@@ -104,7 +104,7 @@ export default class Tips {
    */
 
   static error (title, onHide) {
-    const duration = 500
+    const duration = 700
     wx.showToast({
       title: title,
       image: '/images/icons/error.png',

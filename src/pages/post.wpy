@@ -38,7 +38,7 @@
     </view>
 
     <view class="zan-btns">
-      <button class="zan-btn zan-btn--danger" formType="submit">立即发布</button>
+      <button class="zan-btn zan-btn--danger {{ posting?'zan-btn--loading':'' }}" formType="submit">立即发布</button>
     </view>
   </form>
 </template>
@@ -48,9 +48,11 @@ import wepy from 'wepy'
 import zanField from '../components/zan/zan-field'
 import base from '../mixins/base'
 import input from '../mixins/input'
+import postRequire from '../api/postRequire'
 
 export default class Post extends wepy.page {
   data = {
+    posting: false,
     dateTimeObj: {
       dataFormat: 'YYYY-MM-DD',
       timeFormat: 'hh:mm',
@@ -81,7 +83,8 @@ export default class Post extends wepy.page {
     },
     form_mobile: {
       name: 'mobile',
-      title: '手机号码'
+      title: '手机号码',
+      inputType: 'number'
     }
   };
   components = {
@@ -108,6 +111,7 @@ export default class Post extends wepy.page {
               self[componentId].longitude = locationResult.longitude
             }
             evt.$apply()
+            return false
           }
         })
       }
@@ -120,8 +124,68 @@ export default class Post extends wepy.page {
       const dataKey = isTime ? 'time' : 'date'
       this.dateTimeObj[dataKey] = val
     },
+    /**
+     * 提交
+     */
     async formSubmit() {
-
+      const name = this.input['form_name']
+      const mobile = this.input['form_mobile']
+      const detail = this.input['form_detail']
+      const startDate = this.dateTimeObj.date
+      const startTime = this.dateTimeObj.time
+      const startPlaceForVail = this.form_startPlace.value
+      const endPlaceForVail = this.form_endPlace.value
+      const rules = [
+        {
+          value: name,
+          method: 'required',
+          message: '输入名称!'
+        },
+        {
+          value: mobile,
+          method: 'required',
+          message: '输入手机号码!'
+        },
+        {
+          value: mobile,
+          method: 'tel',
+          message: '手机号码不正确!'
+        },
+        {
+          value: startDate,
+          method: 'required',
+          message: '输入出运日期!'
+        },
+        {
+          value: startTime,
+          method: 'required',
+          message: '输入出运时间!'
+        },
+        {
+          value: startPlaceForVail,
+          method: 'required',
+          message: '输入始发地!'
+        },
+        {
+          value: endPlaceForVail,
+          method: 'required',
+          message: '输入目的地!'
+        }
+      ]
+      if (!this.check(rules)) {
+        return false
+      }
+      this.posting = true
+      const result = await postRequire.post({
+        name,
+        mobile,
+        startDate,
+        startTime,
+        startPlaceForVail,
+        endPlaceForVail,
+        detail
+      })
+      this.posting = false
     }
   };
 
