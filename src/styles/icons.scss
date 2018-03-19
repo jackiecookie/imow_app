@@ -1,17 +1,16 @@
 @import "variable";
-@font-face {
-  font-family: 'iconfont';  /* project id 553949 */
-  src: url('//at.alicdn.com/t/font_553949_h9wsktap2h9kvs4i.eot');
-  src: url('//at.alicdn.com/t/font_553949_h9wsktap2h9kvs4i.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_553949_h9wsktap2h9kvs4i.woff') format('woff'),
-  url('//at.alicdn.com/t/font_553949_h9wsktap2h9kvs4i.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_553949_h9wsktap2h9kvs4i.svg#iconfont') format('svg');
+@font-face {font-family: "iconfont";
+  src: url('//at.alicdn.com/t/font_597097_vsn2mpvz8asb57b9.eot?t=1521461797427'); /* IE9*/
+  src: url('//at.alicdn.com/t/font_597097_vsn2mpvz8asb57b9.eot?t=1521461797427#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff;charset=utf-8;base64,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') format('woff'),
+  url('//at.alicdn.com/t/font_597097_vsn2mpvz8asb57b9.ttf?t=1521461797427') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('//at.alicdn.com/t/font_597097_vsn2mpvz8asb57b9.svg?t=1521461797427#iconfont') format('svg'); /* iOS 4.1- */
 }
 @mixin icon-size($size){
   line-height: $size;
   font-size: $size;
 }
-icon {
+.icon {
   font-family:"iconfont" !important;
   @include icon-size(20px);
   color: $color-primary;
@@ -24,75 +23,20 @@ icon {
   padding: 5rpx;
 }
 
-icon.xxlarge{@include icon-size(40px);}
-icon.xlarge{@include icon-size(35px);}
-icon.large{@include icon-size(30px);}
-icon.normal{@include icon-size(25px);}
-icon.small{@include icon-size(20px);}
-icon.xsmall{@include icon-size(15px);}
+.icon.xxlarge{@include icon-size(40px);}
+.icon.xlarge{@include icon-size(35px);}
+.icon.large{@include icon-size(30px);}
+.icon.normal{@include icon-size(25px);}
+.icon.small{@include icon-size(20px);}
+.icon.xsmall{@include icon-size(15px);}
 
-icon[color="primary"]{color: $color-primary}
-icon[color="major"]{color: $color-major}
-icon[color="white"]{color: white}
-icon[color="gray"]{color: #8a8a8a}
+.icon[color="primary"]{color: $color-primary}
+.icon[color="major"]{color: $color-major}
+.icon[color="white"]{color: white}
+.icon[color="gray"]{color: #8a8a8a}
 
-icon.shop:before { content: "\e601"; }
-icon.call:before { content: "\e614"; }
-icon.more:before { content: "\e6a7"; }
-icon.edit:before { content: "\e642"; }
-icon.status-8:before { content: "\e689"; }
-icon.error:before { content: "\e613"; }
-icon.alert:before { content: "\e6fc"; }
-icon.privilege:before { content: "\e6b2"; }
-icon.empty:before { content: "\e66f"; }
-icon.cart-fill:before { content: "\e600"; }
-icon.status-6:before { content: "\e621"; }
-icon.close:before { content: "\e723"; }
-icon.cart:before { content: "\e73d"; }
-icon.delete:before { content: "\e74b"; }
-icon.like-fill:before { content: "\e760"; }
-icon.like:before { content: "\e761"; }
-icon.cart-empty:before { content: "\e663"; }
-icon.status-4:before { content: "\e611"; }
-icon.back:before { content: "\e639"; }
-icon.cart-round:before { content: "\e63b"; }
-icon.onsale:before { content: "\e61b"; }
-icon.onclose:before { content: "\e606"; }
-icon.bouns:before { content: "\e60a"; }
-icon.chat:before { content: "\e7a8"; }
-icon.status-2:before { content: "\e62f"; }
-icon.status-7:before { content: "\e603"; }
-icon.reduce:before { content: "\e6af"; }
-icon.status-1:before { content: "\e6b5"; }
-icon.customer:before { content: "\e643"; }
-icon.star-fill:before { content: "\e6b0"; }
-icon.plus-square:before { content: "\e640"; }
-icon.notice:before { content: "\e615"; }
-icon.package:before { content: "\e6ad"; }
-icon.share:before { content: "\e622"; }
-icon.expiring:before { content: "\e6ca"; }
-icon.plus:before { content: "\e60e"; }
-icon.status-5:before { content: "\e66c"; }
-icon.status-3:before { content: "\e602"; }
-icon.coupon:before { content: "\e60f"; }
-icon.inshop:before { content: "\e8b2"; }
-icon.fork:before { content: "\e616"; }
-icon.star:before { content: "\e630"; }
-icon.sender:before { content: "\e607"; }
-icon.minus:before { content: "\e636"; }
-icon.expired:before { content: "\e64e"; }
-icon.used:before { content: "\e64f"; }
-icon.new:before { content: "\e60d"; }
-icon.modify:before { content: "\e63c"; }
-icon.qrcode:before { content: "\e668"; }
-icon.sign:before { content: "\e641"; }
-icon.back-round:before { content: "\e884"; }
-icon.vip:before { content: "\e94f"; }
-icon.sale:before { content: "\e885"; }
-icon.address:before { content: "\e766"; }
-icon.picked:before { content: "\e618"; }
-icon.home-fill:before { content: "\e750"; }
-icon.home:before { content: "\e751"; }
-icon.confirm:before { content: "\e612"; }
-icon.checked:before { content: "\e684"; }
-icon.check:before { content: "\e65a"; }
+
+.icon-cargo:before { content: "\e635"; }
+
+
+.icon-huoche:before { content: "\e636"; }

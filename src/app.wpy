@@ -29,12 +29,14 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/login',
+      'pages/postType',
       'pages/post'
     ],
     window: {
       backgroundTextStyle: 'dark',
       backgroundColor: '#F5F5F5',
-      navigationBarBackgroundColor: '#1296db'
+      navigationBarBackgroundColor: '#1296db',
+      enablePullDownRefresh: true
     },
     tabBar: {
       color: '#AEADAD',
@@ -45,8 +47,11 @@ export default class extends wepy.app {
         pagePath: 'pages/index',
         text: '首页'
       }, {
-        pagePath: 'pages/post',
+        pagePath: 'pages/postType',
         text: '发布'
+      }, {
+        pagePath: 'pages/post',
+        text: '查找'
       }, {
         pagePath: 'pages/index',
         text: '我的'
@@ -87,6 +92,7 @@ export default class extends wepy.app {
     // this.syncStoreConfig('third_session')
     // await auth.login()
     // Tips.loaded()
+
   }
 
   syncStoreConfig(key) {

@@ -1,0 +1,71 @@
+<template>
+    <view class="zan-btns z-p">
+      <view class="z-c">
+        <view class="zan-panel-title">选择你要发布的类目</view>
+        <button class="zan-btn y-btn">
+           <view class="icon-wrap">
+      <view class="icon icon-cargo xxlarge"  style="color: #ff4343;">
+      </view>
+       <view class="panel-title inline">我有货</view>
+    </view>
+          </button>
+        <button class="zan-btn y-btn">
+           <view class="icon-wrap">
+      <view class="icon icon-huoche xxlarge"  style="color: #ff4343;">
+      </view>
+       <view class="panel-title inline">我有车</view>
+    </view>
+          </button>
+        <view></view>
+      </view>
+      </view>
+       
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class PostType extends wepy.page {
+
+}
+</script>
+
+<style lang="scss">
+@import '../styles/zan/panel.scss';
+@import '../styles/zan/btn.scss';
+.z-p{
+  height: 100%;
+  content: '';
+  display: block;
+}
+.z-c{
+   position: relative;
+        top: 44%;
+        transform: translateY(-50%);
+}
+.y-btn{
+  border-radius: 20px;
+  width: 44%;
+  height: 130px;
+  display: inline-block;
+  text-align: center;
+  line-height: 130px;
+  margin:10px;
+}
+.y-btn-l{
+ margin-left:30px 
+}
+.y-btn-r{
+margin-right:30px
+}
+.inline{
+  display: inline;
+}
+.panel-title{
+  font-size:19px;
+line-height:1;
+color:rgb(112, 109, 109);
+padding:0px 0px 0 18px;
+
+}
+</style>

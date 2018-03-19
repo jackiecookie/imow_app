@@ -1,6 +1,6 @@
 <template>
   <view>
-    <SearchBar :placeholder="searchText"></SearchBar>
+     <SearchBar :placeholder="searchText"></SearchBar>
     <Swiper :list.sync="swipers" height="280"></Swiper>
     <Category :list.sync="categorys" col="4"></Category>
   </view>
@@ -30,12 +30,17 @@ export default class Index extends wepy.page {
       { image: '/images/IMG_1385.JPG', url: '/pages/login' }
     ],
     categorys: [
-      { title: '阿', image: '/images/IMG_1385.JPG' },
-      { title: '母', image: '/images/IMG_1385.JPG' },
-      { title: '工', image: '/images/IMG_1385.JPG' },
+      { title: '发布', image: '/images/IMG_1385.JPG' },
+      { title: '查找', image: '/images/IMG_1385.JPG' },
+      { title: '我的', image: '/images/IMG_1385.JPG' },
       { title: '业', image: '/images/IMG_1385.JPG' }
     ]
   };
+  onTabItemTap(item) {
+    console.log(item.index)
+    console.log(item.pagePath)
+    console.log(item.text)
+  }
 }
 </script>
 
