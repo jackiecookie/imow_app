@@ -29,7 +29,7 @@
            {{pathWay[index]}}
         </view>
         <view class="zan-cell__ft">
-        <view wx:if="{{index==pathWay.length-1}}" class="zan-icon zan-icon-add cur-Icon icon-lg" bindtap="addPathway"></view>
+        <view wx:if="{{index==pathWay.length-1}}" class="zan-icon zan-icon-add cur-Icon" bindtap="addPathway"></view>
         <view wx:if="{{index>0}}" style="padding-left:6rpx" data-index="{{index}}" class="zan-icon zan-icon-close cur-Icon" bindtap="removePathway"></view>
       </view>
       </view>

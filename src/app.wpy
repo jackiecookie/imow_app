@@ -35,8 +35,7 @@ export default class extends wepy.app {
     window: {
       backgroundTextStyle: 'dark',
       backgroundColor: '#F5F5F5',
-      navigationBarBackgroundColor: '#1296db',
-      enablePullDownRefresh: true
+      navigationBarBackgroundColor: '#1296db'
     },
     tabBar: {
       color: '#AEADAD',
