@@ -122,7 +122,9 @@ export default class zanActionsheet extends wepy.component {
     componentId: String
   }
   data = {
-    zanActionsheet: {}
+    zanActionsheet: {
+
+    }
   }
   methods = {
     showZanActionsheet(options = {}, e) {

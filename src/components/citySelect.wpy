@@ -1,0 +1,354 @@
+<template>
+<view class="city-select_actionsheet {{ show ? 'zan-actionsheet--show' : '' }}">
+  <view class='city-select_list-warpper'>
+  <view wx:if="{{search}}" class='city-select_list-search'>
+    <view class='city-select_list-search-box'>
+      <icon type="search" size="15" />
+      <input placeholder="输入您要搜索的城市" bindinput='input' />
+    </view>
+    <button class='city-select_search-button' catchtap='searchMt'>搜索</button>
+  </view>
+  
+  <block wx:if="{{list.length != 0 }}">
+    <scroll-view class="city-select_list-scroll {{search?'top':''}}" scroll-y='{{search}}' scroll-into-view='{{jumpNum}}' scroll-with-animation='{{animation}}'>
+      <!-- 我的位置  -->
+      <view wx:if="{{myCity}}">
+        <view class='city-select_list-title'>我的位置</view>
+        <view class='city-select_list-horizontal'>
+          <view class="city-select_list-name {{idx === 0 ?'':'border'}}" data-detail="{{myCityName}}" catchtap='detailMt'>
+            {{myCityName}}
+          </view>
+        </view>
+      </view>
+      <block  wx:for="{{list}}"  wx:key="key">
+      <view id="{{'citySelctindex'+index}}">
+        <view class='city-select_list-title'>{{item.title}}</view>
+        <view class="{{ index===0 && horizontal && item.type==='hot'?'city-select_list-horizontal':''}}">
+          <view class="city-select_list-name {{idx === 0 ?'':'border'}}" wx:for="{{item.item}}" wx:for-item="city" wx:for-index="idx" wx:key="city" data-detail="{{city}}" catchtap='detailMt'>
+            {{city.name}}
+          </view>
+        </view>
+      </view>
+      </block>
+    </scroll-view>
+    <view class='city-select_list-right-wrapper'>
+      <block wx:for="{{rightArr}}" wx:key="rightArr">
+ <view class='city-select_right-item'  data-id="{{'citySelctindex'+index}}" catchtap='jumpMt'>
+        {{rightArr[index]}}
+      </view>
+      </block>
+    </view>
+  </block>
+  <block wx:else>
+    <view class='city-select_nodata'>没有搜索到相关的数据哦</view>
+  </block>
+</view>
+</view>
+
+</template>
+
+<script>
+import wepy from 'wepy'
+import allCity from '../utils/allCity'
+import mapApi from '../api/map'
+
+export default class citySelect extends wepy.component {
+  /**
+   * 组件的属性列表
+   */
+  props= {
+    horizontal: true, // 第一个选项是否横排显示（一般第一个数据选项为 热门城市，常用城市之类 ，开启看需求）
+    animation: true, // 过渡动画是否开启
+    search: true,  // 是否开启搜索
+    myCity: true
+  }
+
+  data= {
+    list: allCity.list,
+    rightArr: allCity.rightArr, // 右侧字母展示
+    jumpNum: '', // 跳转到那个字母
+    myCityName: '请选择', // 默认我的城市
+    show: false,
+    allCity: allCity.data
+  }
+
+  onLoad() {
+    if (this.myCity) {
+      this.methods.getCity.apply(this)
+    }
+  }
+  methods= {
+    showCitySelect(options = {}, e) {
+      this.show = true
+      this.$apply()
+    },
+    // 数据重新渲染
+    resetRight(data) {
+      let rightArr = []
+      for (let i in data) {
+        rightArr.push(data[i].title.substr(0, 1))
+      }
+      this.list = data
+      this.rightArr = rightArr
+      this.$apply()
+    },
+    async getCity() {
+      const locationResult = await mapApi.reverse()
+      this.myCityName = locationResult.current.city
+      this.$apply()
+    },
+    // 右侧字母点击事件
+    jumpMt(e) {
+      let jumpNum = e.currentTarget.dataset.id
+      this.jumpNum = jumpNum
+    },
+    // 列表点击事件
+    detailMt(e) {
+      let detail = e.currentTarget.dataset.detail
+
+      let myEventOption = {
+        bubbles: false, // 事件是否冒泡
+        composed: false, // 事件是否可以穿越组件边界
+        capturePhase: false // 事件是否拥有捕获阶段
+      } // 触发事件的选项
+      this.$emit('citySelected', detail.name || detail, myEventOption)
+      this.show = false
+      this.$apply()
+    },
+    // 获取搜索输入内容
+    input(e) {
+      this.value = e.detail.value
+    },
+    // 基础搜索功能
+    searchMt() {
+      this.methods._search.call(this)
+    },
+    _search() {
+      let data = this.allCity
+      let newData = []
+      for (let i = 0; i < data.length; i++) {
+        let itemArr = []
+        for (let j = 0; j < data[i].item.length; j++) {
+          if (data[i].item[j].name.indexOf(this.value) > -1) {
+            let itemJson = {}
+            for (let k in data[i].item[j]) {
+              itemJson[k] = data[i].item[j][k]
+            }
+            itemArr.push(itemJson)
+          }
+        }
+        if (itemArr.length === 0) {
+          continue
+        }
+        newData.push({
+          title: data[i].title,
+          type: data[i].type ? data[i].type : '',
+          item: itemArr
+        })
+      }
+      this.methods.resetRight.call(this, newData)
+    },
+    // 城市定位
+    locationMt() {
+      // TODO 暂时没有实现 定位自己的城市，需要引入第三方api
+    }
+
+  }
+}
+</script>
+
+<style lang="scss">
+
+
+.city-select_actionsheet {
+  background-color: #f8f8f8;
+}
+
+.city-select_actionsheet__mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
+}
+
+/* zan-actionsheet 展示出来的样式 */
+.zan-actionsheet--show .city-select_list-warpper {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  display: block;
+  width:100%;
+height:100%;
+
+}
+.zan-actionsheet--show .city-select_actionsheet__mask {
+  display: block;
+}
+
+.zan-actionsheet--show .city-select_list-right-wrapper {
+  display: block;
+}
+.city-select_list-warpper {
+  // position: relative;
+  // left: 0;
+  // right: 0;
+  // bottom: 0;
+  // background:  #f8f8f8;
+ 
+  // z-index: 111;
+  // opacity: 0;
+
+
+
+    position: absolute;
+  top: 0rpx;
+  right: 0rpx;
+  padding: 0rpx 0;
+  border-radius: 20rpx;
+  z-index: 999;
+  background: #f8f8f8;
+   transform: translate3d(0, 50%, 0);
+  transform-origin: center;
+  transition: all 0.2s ease;
+    display: none;
+}
+
+.city-select_list-scroll {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+.city-select_list-scroll.top{
+  padding-top: 90rpx;
+}
+
+/* 样式控制  */
+
+.city-select_list-title {
+  background: #f5f5f5;
+  color: #666;
+  font-size: 36rpx;
+  padding: 10rpx;
+  padding-left: 30rpx;
+  padding-top: 15rpx;
+}
+
+.city-select_list-name {
+  position: relative;
+  font-size: 28rpx;
+  padding: 15rpx;
+  padding-left: 30rpx;
+  color: #999;
+}
+
+.city-select_list-name.border::after {
+  content: "";
+  position: absolute;
+  left: 30rpx;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: #f5f5f5;
+}
+
+.city-select_list-right-big-wrapper{
+  position: absolute;
+}
+
+.city-select_list-right-wrapper {
+  position: fixed;
+  top: 100rpx;
+  right: 20rpx;
+  padding: 10rpx 0;
+  border-radius: 20rpx;
+  z-index: 112;
+  background: #ddd;
+}
+
+
+
+
+.city-select_right-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rpx 10rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.city-select_list-search {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 90rpx;
+  padding: 10rpx 30rpx;
+  box-sizing: border-box;
+  z-index: 20;
+  background: #FFF;
+}
+
+.city-select_search-title {
+  flex-shrink: 0;
+  font-size: 28rpx;
+  padding-right: 10rpx;
+}
+
+.city-select_list-search-box {
+  display: flex;
+  align-items: center;
+  padding: 0 30rpx;
+  width: 100%;
+  height: 70rpx;
+  background: #f5f5f5;
+  border-radius: 90rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.city-select_list-search-box input {
+  width: 100%;
+  padding-left: 10rpx;
+}
+
+.city-select_search-button {
+  /* width: 100rpx; */
+  flex-shrink: 0;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 28rpx;
+  margin-left: 10rpx;
+}
+
+/* 热门城市横排显示样式  */
+
+.city-select_list-horizontal {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10rpx;
+  padding-right: 50rpx;
+}
+
+.city-select_list-horizontal .city-select_list-name {
+  padding: 5rpx 20rpx;
+  border: 1px #ccc solid;
+  border-radius: 10rpx;
+  margin: 10rpx;
+  /* margin-right: 20rpx; */
+}
+
+
+/* 无数据  */
+.city-select_nodata {
+  padding-top: 200rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #ddd;
+}
+</style>

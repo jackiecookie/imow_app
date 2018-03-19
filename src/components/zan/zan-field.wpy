@@ -84,7 +84,7 @@
       class="zan-field__input zan-cell__bd {{ options.right ? 'zan-field__input--right' : '' }}"
       placeholder-class="zan-field__placeholder"
       bindinput="handleZanFieldChange"
-      bindfocus="handleZanFieldFocus"
+      bindtap="handleZanFieldFocus"
       bindblur="handleZanFieldBlur"
       data-component-id="{{ componentId || '' }}"/>
   </view>

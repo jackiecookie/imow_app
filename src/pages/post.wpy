@@ -1,37 +1,41 @@
 <template>
   <form bindsubmit="formSubmit" bindreset="formReset">
     <view class="zan-panel-title">要求描述</view>
-    <view class="zan-panel">
+    <view class="zan-panel" wx:if="{{ hidePlaceholder }}">
       <detailField :options="form_detail" componentId="form_detail"></detailField>
     </view>
     <view class="zan-panel-title">信息</view>
     <view class="zan-panel">
-      <!-- 起始地点 
-      <startPlacefield :options="form_startPlace" componentId="form_startPlace"></startPlacefield>
-      目标地点
-      <endPlacefield :options="form_endPlace" componentId="form_endPlace"></endPlacefield>
-       -->
-      <!-- ------------------------ 出发地点 ---------------------------- -->
-      <view class="zan-cell zan-field">
-        <view class="zan-cell__hd zan-field__title">出发地点</view>
-        <picker mode="region" class="zan-field__input zan-cell__bd" value="{{ startRegion }}" bindchange="startRegionChange" name="startPlace" custom-item="{{customItem}}">
-          <view class="picker zan-field__input">
-            {{ startRegion[0]!=='全部'?startRegion[0]:'' }} {{ startRegion[1]!=='全部'?startRegion[1]:'' }} {{  startRegion[2]!=='全部'?startRegion[2]:'' }}
-          </view>
-        </picker>
-      </view>
-      <!-- ------------------------ 出发地点 ---------------------------- -->
 
-      <!-- ------------------------ 目的地 ---------------------------- -->
+      <!-- 起始地点  -->
+       <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">起始地</view>
+        <view class="picker zan-field__input" bindtap='showCitySelect' id='form_startPlace'>
+           {{form_startPlace}}
+        </view>
+      </view>
+      <!--目标地点 -->
       <view class="zan-cell zan-field">
         <view class="zan-cell__hd zan-field__title">目的地</view>
-        <picker mode="region" class="zan-field__input zan-cell__bd" value="{{ endRegion }}" bindchange="endRegionChange" name="endPlace" custom-item="{{customItem}}">
-          <view class="picker zan-field__input">
-            {{ endRegion[0]!=='全部'?endRegion[0]:'' }} {{ endRegion[1]!=='全部'?endRegion[1]:'' }} {{ endRegion[2]!=='全部'?endRegion[2]:''}}
-          </view>
-        </picker>
+        <view class="picker zan-field__input" bindtap='showCitySelect' id='form_endPlace'>
+           {{form_endPlace}}
+        </view>
       </view>
-      <!-- ------------------------ 目的地 ---------------------------- -->
+      <!--途径地 -->
+      <block  wx:for="{{pathWay}}"  wx:key="tjkey">
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">途径地</view>
+        <view class="picker zan-field__input" bindtap='showCitySelect' id='pathWay-{{index}}'>
+           {{pathWay[index]}}
+        </view>
+        <view class="zan-cell__ft">
+        <view wx:if="{{index==pathWay.length-1}}" class="zan-icon zan-icon-add cur-Icon" bindtap="addPathway"></view>
+        <view wx:if="{{index>0}}" style="padding-left:6rpx" data-index="{{index}}" class="zan-icon zan-icon-close cur-Icon" bindtap="removePathway"></view>
+      </view>
+      </view>
+      </block>
+       
+      <!-- ------------------------ 地点选择 结束 ---------------------------- -->
 
       <!-- ------------------------ 出发日期 ---------------------------- -->
       <view class="zan-cell zan-field">
@@ -65,19 +69,24 @@
     <view class="zan-btns">
       <button class="zan-btn zan-btn--danger {{ posting?'zan-btn--loading':'' }}" formType="submit">立即发布</button>
     </view>
+     <citySelect myCity='true' search='true' horizontal='true' animation='true' show='{{showcity}}' />
   </form>
+
 </template>
 
 <script>
 import wepy from 'wepy'
 import zanField from '../components/zan/zan-field'
+import citySelect from '../components/citySelect'
 import base from '../mixins/base'
 import input from '../mixins/input'
 import postRequire from '../api/postRequire'
 
 export default class Post extends wepy.page {
   data = {
+    showcity: true,
     posting: false,
+    hidePlaceholder: true,
     dateTimeObj: {
       dataFormat: 'YYYY-MM-DD',
       timeFormat: 'hh:mm',
@@ -86,24 +95,13 @@ export default class Post extends wepy.page {
     },
     form_detail: {
       name: 'detail',
-      placeholder: '请详细描述你的要求',
+      placeholder: '请详细描述你的要求如:货车箱数...',
       type: 'textarea'
     },
-    startRegion: [],
-    endRegion: [],
     customItem: '全部',
-    // form_startPlace: {
-    //   name: 'startPlace',
-    //   title: '出发地',
-    //   latitude: 0,
-    //   longitude: 0
-    // },
-    // form_endPlace: {
-    //   name: 'endPlace',
-    //   title: '目的地',
-    //   latitude: 0,
-    //   longitude: 0
-    // },
+    form_startPlace: '',
+    form_endPlace: '',
+    pathWay: [''],
     form_name: {
       name: 'name',
       title: '姓名'
@@ -116,55 +114,50 @@ export default class Post extends wepy.page {
   };
   components = {
     detailField: zanField,
-    startPlacefield: zanField,
-    endPlacefield: zanField,
     nameField: zanField,
-    mobileField: zanField
+    mobileField: zanField,
+    citySelect: citySelect
   };
-  // events = {
-  //   zanFieldFocus(evt) {
-  //     const self = this
-  //     const componentId = evt.componentId
-  //     // 起始地选当前位置
-  //     if (
-  //       componentId === 'form_startPlace' ||
-  //       componentId === 'form_endPlace'
-  //     ) {
-  //       wx.chooseLocation({
-  //         complete: locationResult => {
-  //           if (locationResult.address) {
-  //             self[componentId].value = locationResult.address
-  //             self[componentId].latitude = locationResult.latitude
-  //             self[componentId].longitude = locationResult.longitude
-  //           }
-  //           evt.$apply()
-  //           return false
-  //         }
-  //       })
-  //     }
-  //   }
-  // };
-  methods = {
-    showRegion(region) {
-      if (region && region[0] && region[1] && region[2]) {
-        return region.join(',')
-        // return `${region[0]},${region[1]},${region[2]}`
+  events = {
+    citySelected(evt) {
+      const selctName = evt
+      if (selctName) {
+        if (this._placrType.indexOf('-') > -1) {
+          const _placrTypeArry = this._placrType.split('-')
+          this[_placrTypeArry[0]][_placrTypeArry[1]] = selctName
+        } else {
+          this[this._placrType] = selctName
+        }
       }
-      return ''
+      this.hidePlaceholder = true
+    }
+  };
+
+  methods = {
+     /**
+     * 新增途径点
+     */
+    addPathway() {
+      this.pathWay.push('')
     },
-    startRegionChange(evt) {
-      this.startRegion = evt.detail.value
-      this.$apply()
-    },
-    endRegionChange(evt) {
-      this.endRegion = evt.detail.value
-      this.$apply()
+      /**
+     * 删除途径点
+     */
+    removePathway(evt) {
+      const currentIndex = evt.currentTarget.dataset.index
+      this.pathWay.splice(currentIndex, 1)
     },
     dateTimeChange(evt) {
       const val = evt.detail.value
       const isTime = val.indexOf(':') > -1
       const dataKey = isTime ? 'time' : 'date'
       this.dateTimeObj[dataKey] = val
+    },
+    showCitySelect(evt) {
+      this._placrType = evt.currentTarget.id
+      // BUG:placehoder没办法被遮住 只能暂时先隐藏
+      this.hidePlaceholder = false
+      this.$invoke('citySelect', 'showCitySelect')
     },
     /**
      * 提交
@@ -175,8 +168,8 @@ export default class Post extends wepy.page {
       const detail = this.input['form_detail']
       const startDate = this.dateTimeObj.date
       const startTime = this.dateTimeObj.time
-      const startPlaceForVail = this.form_startPlace.value
-      const endPlaceForVail = this.form_endPlace.value
+      const startPlaceForVail = this.form_startPlace
+      const endPlaceForVail = this.form_endPlace
       const rules = [
         {
           value: name,
@@ -238,4 +231,9 @@ export default class Post extends wepy.page {
 <style lang="scss">
 @import '../styles/zan/panel.scss';
 @import '../styles/zan/btn.scss';
+@import '../styles/zan/icon.scss';
+.cur-Icon {
+  color: $blue;
+  font-size: 42rpx;
+}
 </style>
