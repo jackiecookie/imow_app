@@ -29,8 +29,10 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/login',
+      'pages/register',
       'pages/postType',
-      'pages/post'
+      'pages/post',
+      'pages/search'
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -49,7 +51,7 @@ export default class extends wepy.app {
         pagePath: 'pages/postType',
         text: '发布'
       }, {
-        pagePath: 'pages/post',
+        pagePath: 'pages/search',
         text: '查找'
       }, {
         pagePath: 'pages/index',
@@ -62,7 +64,8 @@ export default class extends wepy.app {
   globalData = {
     auth: {
       third_session: null
-    }
+    },
+    pageParams: {}
   }
 
   constructor () {

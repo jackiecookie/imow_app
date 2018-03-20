@@ -2,11 +2,17 @@
   <form bindsubmit="formSubmit" bindreset="formReset">
     <view class="zan-panel">
       <logNamefield :options="form_loginName" componentId="form.logNamefield"></logNamefield>
+       <view class="zan-cell zan-field">
+          <input type="text" placeholder="验证码" class="zan-field__input zan-cell__bd" placeholder-class="zan-field__placeholder" bindinput="handleZanFieldChange" data-component-id="{{ componentId || '' }}"/>
+          <view class="zan-cell__ft">
+            <vcode @tap.user="code" />
+          </view>
+        </view>
       <pwdfield :options="form_password" componentId="form.pwdfield"></pwdfield>
       <view class="zan-btns">
-        <button class="zan-btn zan-btn--danger" formType="submit">登陆并绑定微信号</button>
+        <button class="zan-btn zan-btn--danger" formType="submit">注册并绑定微信号</button>
       </view>
-      <view class="register_title" bindtap="routeToRegister">我没阿母账号,我要注册</view>
+      <view class="register_title"  bindtap="redirectToLogin">已有账号,登录</view>
     </view>
   </form>
 </template>
@@ -14,28 +20,52 @@
 <script>
 import wepy from 'wepy'
 import zanField from '../components/zan/zan-field'
+import vcode from '../components/vcode'
 import base from '../mixins/base'
 import input from '../mixins/input'
 import router from '../mixins/router'
 import memberApi from '../api/member'
 
-export default class Login extends wepy.page {
+export default class Register extends wepy.page {
   data = {
     form_loginName: {
       name: 'loginName',
-      placeholder: '输入阿母账号'
+      placeholder: '设置账号'
+    },
+    form_vcode: {
+      name: 'vcode',
+      placeholder: '手机验证码'
     },
     form_password: {
       name: 'password',
-      placeholder: '输入密码',
+      placeholder: '设置密码',
       password: true
     }
   };
   components = {
     logNamefield: zanField,
-    pwdfield: zanField
+    pwdfield: zanField,
+    vcode: vcode
   };
   methods = {
+    async code () {
+      let logNameVal = this.input['form.logNamefield']
+      const rules = [
+        {
+          value: logNameVal,
+          method: 'required',
+          message: '账号不能为空'
+        },
+        {
+          value: logNameVal,
+          method: 'tel',
+          message: '手机号码不正确'
+        } ]
+      if (!this.check(rules)) {
+        return false
+      }
+      this.$invoke('vcode', 'cd', 60)
+    },
     async formSubmit() {
       let logNameVal = this.input['form.logNamefield']
       let pwdVal = this.input['form.pwdfield']
@@ -60,7 +90,7 @@ export default class Login extends wepy.page {
         return false
       }
       if (await memberApi.login(logNameVal, pwdVal)) {
-        this.navigateBack()
+        this.routeToIndex()
       }
     }
   };
@@ -73,4 +103,5 @@ export default class Login extends wepy.page {
 @import '../styles/zan/panel.scss';
 @import '../styles/zan/btn.scss';
 @import '../styles/page/login&register.scss';
+
 </style>

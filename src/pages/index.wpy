@@ -36,11 +36,6 @@ export default class Index extends wepy.page {
       { title: '业', image: '/images/IMG_1385.JPG' }
     ]
   };
-  onTabItemTap(item) {
-    console.log(item.index)
-    console.log(item.pagePath)
-    console.log(item.text)
-  }
 }
 </script>
 

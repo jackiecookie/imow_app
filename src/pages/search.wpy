@@ -1,0 +1,94 @@
+<template>
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <view class="zan-panel-title">选填查找条件</view>
+    <view class="zan-panel">
+       <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">类型</view>
+        <picker mode="selector" class="zan-field__input zan-cell__bd" range="{{ typeRange }}" >
+          <view class="picker zan-field__input">
+            {{ dateTimeObj.date }}
+          </view>
+        </picker>
+      </view>
+      <!-- 起始地点  -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">起始地</view>
+        <view class="picker zan-field__input" bindtap='showCitySelect' id='form_startPlace'>
+          {{form_startPlace}}
+        </view>
+      </view>
+      <!--目标地点 -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">目的地</view>
+        <view class="picker zan-field__input" bindtap='showCitySelect' id='form_endPlace'>
+          {{form_endPlace}}
+        </view>
+      </view>
+      <!-- ------------------------ 出发日期 ---------------------------- -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">出发日期</view>
+        <picker mode="date" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.dataFormat }}" bindchange="dateTimeChange" name="startDate">
+          <view class="picker zan-field__input">
+            {{ dateTimeObj.date }}
+          </view>
+        </picker>
+      </view>
+      <!-- ------------------------ 出发日期 ---------------------------- -->
+
+      <!-- ------------------------ 出发时间 ---------------------------- -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">出发时间</view>
+        <picker mode="time" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.timeFormat }}" bindchange="dateTimeChange" name="startTime">
+          <view class="picker zan-field__input">
+            {{ dateTimeObj.time }}
+          </view>
+        </picker>
+      </view>
+      <!-- ------------------------ 出发时间 ---------------------------- -->
+      <view class="zan-btns">
+        <button class="zan-btn zan-btn--primary" formType="submit">搜索</button>
+      </view>
+    </view>
+  </form>
+</template>
+
+<script>
+import wepy from 'wepy'
+import zanField from '../components/zan/zan-field'
+import base from '../mixins/base'
+import input from '../mixins/input'
+import router from '../mixins/router'
+import citySelect from '../components/citySelect'
+
+export default class Login extends wepy.page {
+  data = {
+    typeRange: ['找车', '找货'],
+    showcity: true,
+    posting: false,
+    dateTimeObj: {
+      dataFormat: 'YYYY-MM-DD',
+      timeFormat: 'hh:mm',
+      date: '',
+      time: ''
+    },
+    form_startPlace: '',
+    form_endPlace: ''
+  };
+  components = {
+    citySelect: citySelect,
+    pwdfield: zanField
+  };
+  methods = {
+    async formSubmit() {
+
+    }
+  };
+
+  mixins = [base, input, router];
+}
+</script>
+
+<style lang="scss">
+@import '../styles/zan/panel.scss';
+@import '../styles/zan/btn.scss';
+</style>

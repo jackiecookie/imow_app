@@ -8,33 +8,33 @@
     <view class="zan-panel">
 
       <!-- 起始地点  -->
-       <view class="zan-cell zan-field">
+      <view class="zan-cell zan-field">
         <view class="zan-cell__hd zan-field__title">起始地</view>
         <view class="picker zan-field__input" bindtap='showCitySelect' id='form_startPlace'>
-           {{form_startPlace}}
+          {{form_startPlace}}
         </view>
       </view>
       <!--目标地点 -->
       <view class="zan-cell zan-field">
         <view class="zan-cell__hd zan-field__title">目的地</view>
         <view class="picker zan-field__input" bindtap='showCitySelect' id='form_endPlace'>
-           {{form_endPlace}}
+          {{form_endPlace}}
         </view>
       </view>
       <!--途径地 -->
-      <block  wx:for="{{pathWay}}"  wx:key="tjkey">
-      <view class="zan-cell zan-field">
-        <view class="zan-cell__hd zan-field__title">途径地</view>
-        <view class="picker zan-field__input" bindtap='showCitySelect' id='pathWay-{{index}}'>
-           {{pathWay[index]}}
+      <block wx:if="{{postType==1}}" wx:for="{{pathWay}}" wx:key="tjkey">
+        <view class="zan-cell zan-field">
+          <view class="zan-cell__hd zan-field__title">途径地</view>
+          <view class="picker zan-field__input" bindtap='showCitySelect' id='pathWay-{{index}}'>
+            {{pathWay[index]}}
+          </view>
+          <view class="zan-cell__ft">
+            <view wx:if="{{index==pathWay.length-1}}" class="zan-icon zan-icon-add cur-Icon" bindtap="addPathway"></view>
+            <view wx:if="{{index>0}}" style="padding-left:6rpx" data-index="{{index}}" class="zan-icon zan-icon-close cur-Icon" bindtap="removePathway"></view>
+          </view>
         </view>
-        <view class="zan-cell__ft">
-        <view wx:if="{{index==pathWay.length-1}}" class="zan-icon zan-icon-add cur-Icon" bindtap="addPathway"></view>
-        <view wx:if="{{index>0}}" style="padding-left:6rpx" data-index="{{index}}" class="zan-icon zan-icon-close cur-Icon" bindtap="removePathway"></view>
-      </view>
-      </view>
       </block>
-       
+
       <!-- ------------------------ 地点选择 结束 ---------------------------- -->
 
       <!-- ------------------------ 出发日期 ---------------------------- -->
@@ -48,7 +48,7 @@
       </view>
       <!-- ------------------------ 出发日期 ---------------------------- -->
 
-       <!-- ------------------------ 出发时间 ---------------------------- -->
+      <!-- ------------------------ 出发时间 ---------------------------- -->
       <view class="zan-cell zan-field">
         <view class="zan-cell__hd zan-field__title">出发时间</view>
         <picker mode="time" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.timeFormat }}" bindchange="dateTimeChange" name="startTime">
@@ -69,7 +69,7 @@
     <view class="zan-btns">
       <button class="zan-btn zan-btn--danger {{ posting?'zan-btn--loading':'' }}" formType="submit">立即发布</button>
     </view>
-     <citySelect myCity='true' search='true' horizontal='true' animation='true' show='{{showcity}}' />
+    <citySelect myCity='true' search='true' horizontal='true' animation='true' show='{{showcity}}' />
   </form>
 
 </template>
@@ -83,7 +83,11 @@ import input from '../mixins/input'
 import postRequire from '../api/postRequire'
 
 export default class Post extends wepy.page {
+  onShow() {
+    base.injectionParas.call(this)
+  }
   data = {
+    postType: 1,
     showcity: true,
     posting: false,
     hidePlaceholder: true,
@@ -98,7 +102,6 @@ export default class Post extends wepy.page {
       placeholder: '请详细描述你的要求如:货车箱数...',
       type: 'textarea'
     },
-    customItem: '全部',
     form_startPlace: '',
     form_endPlace: '',
     pathWay: [''],
@@ -134,13 +137,13 @@ export default class Post extends wepy.page {
   };
 
   methods = {
-     /**
+    /**
      * 新增途径点
      */
     addPathway() {
       this.pathWay.push('')
     },
-      /**
+    /**
      * 删除途径点
      */
     removePathway(evt) {
@@ -216,8 +219,8 @@ export default class Post extends wepy.page {
         mobile,
         startDate,
         startTime,
-        startPlaceForVail,
-        endPlaceForVail,
+        startPlace: startPlaceForVail,
+        endPlace: endPlaceForVail,
         detail
       })
       this.posting = false
