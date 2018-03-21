@@ -214,7 +214,7 @@ export default class Post extends wepy.page {
         return false
       }
       this.posting = true
-      const result = await postRequire.post({
+      const result = await postRequire.postData({
         name,
         mobile,
         startDate,

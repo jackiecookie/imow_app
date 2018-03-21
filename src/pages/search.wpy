@@ -1,55 +1,64 @@
 <template>
-  <form bindsubmit="formSubmit" bindreset="formReset">
-    <view class="zan-panel-title">选填查找条件</view>
-    <view class="zan-panel">
-       <view class="zan-cell zan-field">
-        <view class="zan-cell__hd zan-field__title">类型</view>
-        <picker mode="selector" class="zan-field__input zan-cell__bd" range="{{ typeRange }}" >
-          <view class="picker zan-field__input">
-            {{ dateTimeObj.date }}
+  <view>
+    <form bindsubmit="formSubmit" bindreset="formReset">
+      <view>
+        <view class="tabItemList">
+          <view class="tabItem {{postType=='1'?'on':''}}" bindtap='switchTabToType1'>车找货</view>
+          <view class="tabItem {{postType=='2'?'on':''}}" bindtap='switchTabToType2'>货找车</view>
+        </view>
+        <view class="searchSection">
+          <view class="search-row">
+            <view class="label-l">出发地</view>
+            <view class="label-r">目的地</view>
+            <view class="swap icon icon-switches-b-o xlarge" style="color:#f44;" bindtap="switchPlace"></view>
+            <view class="select-l" bindtap='showCitySelect' id='form_startPlace'>{{form_startPlace}}</view>
+            <view class="select-r" bindtap='showCitySelect' id='form_endPlace'>{{form_endPlace}}</view>
           </view>
-        </picker>
-      </view>
-      <!-- 起始地点  -->
-      <view class="zan-cell zan-field">
-        <view class="zan-cell__hd zan-field__title">起始地</view>
-        <view class="picker zan-field__input" bindtap='showCitySelect' id='form_startPlace'>
-          {{form_startPlace}}
+        </view>
+        <view class="searchSection">
+          <view class="search-row">
+            <view class="label-l" style="width: 100%;">出发日期</view>
+            <view class="select-l" style="width: 100%;">
+              <picker mode="date" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.dataFormat }}" bindchange="dateTimeChange" name="startDate">
+                <view class="picker zan-field__input">
+                  {{ dateTimeObj.date }}
+                </view>
+              </picker>
+            </view>
+          </view>
         </view>
       </view>
-      <!--目标地点 -->
-      <view class="zan-cell zan-field">
-        <view class="zan-cell__hd zan-field__title">目的地</view>
-        <view class="picker zan-field__input" bindtap='showCitySelect' id='form_endPlace'>
-          {{form_endPlace}}
-        </view>
-      </view>
-      <!-- ------------------------ 出发日期 ---------------------------- -->
-      <view class="zan-cell zan-field">
-        <view class="zan-cell__hd zan-field__title">出发日期</view>
-        <picker mode="date" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.dataFormat }}" bindchange="dateTimeChange" name="startDate">
-          <view class="picker zan-field__input">
-            {{ dateTimeObj.date }}
-          </view>
-        </picker>
-      </view>
-      <!-- ------------------------ 出发日期 ---------------------------- -->
-
-      <!-- ------------------------ 出发时间 ---------------------------- -->
-      <view class="zan-cell zan-field">
-        <view class="zan-cell__hd zan-field__title">出发时间</view>
-        <picker mode="time" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.timeFormat }}" bindchange="dateTimeChange" name="startTime">
-          <view class="picker zan-field__input">
-            {{ dateTimeObj.time }}
-          </view>
-        </picker>
-      </view>
-      <!-- ------------------------ 出发时间 ---------------------------- -->
       <view class="zan-btns">
-        <button class="zan-btn zan-btn--primary" formType="submit">搜索</button>
+        <button class="zan-btn zan-btn--danger" formType="submit">搜索</button>
       </view>
-    </view>
-  </form>
+      <citySelect myCity='true' search='true' horizontal='true' animation='true' show='{{showcity}}' />
+    </form>
+    <view class="h-gap"></view>
+    <repeat for="{{dataList}}" key="index" index="index" item="item">
+      <view class="freightList">
+        <view class="freightItem">
+          <view class="freightItem-field">
+            <view class="freightItem-field-l">
+              {{item.startDateTime}}
+            </view>
+            <view class="freightItem-field-r">
+              {{item.name}}
+            </view>
+          </view>
+          <view class="freightItem-field">
+            {{item.startPlace}}
+          </view>
+          <view class="freightItem-field">
+            {{item.endPlace}}
+          </view>
+          <view class="hr"></view>
+          <view class="freightItem-field freightItem-detail">
+            {{item.detail}}
+          </view>
+        </view>
+      </view>
+    </repeat>
+  </view>
 </template>
 
 <script>
@@ -57,38 +66,202 @@ import wepy from 'wepy'
 import zanField from '../components/zan/zan-field'
 import base from '../mixins/base'
 import input from '../mixins/input'
-import router from '../mixins/router'
 import citySelect from '../components/citySelect'
+import postRequire from '../api/postRequire'
 
-export default class Login extends wepy.page {
+export default class Search extends wepy.page {
   data = {
-    typeRange: ['找车', '找货'],
     showcity: true,
     posting: false,
     dateTimeObj: {
       dataFormat: 'YYYY-MM-DD',
-      timeFormat: 'hh:mm',
-      date: '',
-      time: ''
+      date: ''
     },
+    postType: 1,
     form_startPlace: '',
-    form_endPlace: ''
+    form_endPlace: '',
+    dataList: []
   };
   components = {
     citySelect: citySelect,
     pwdfield: zanField
   };
+  events = {
+    citySelected(evt) {
+      const selctName = evt
+      if (selctName) {
+        this[this._placrType] = selctName
+      }
+    }
+  };
   methods = {
     async formSubmit() {
-
+      const data = await postRequire.list({ freightType: this.postType })
+      this.dataList = data.list
+      this.$apply()
+    },
+    dateTimeChange(evt) {
+      const val = evt.detail.value
+      const dataKey = 'date'
+      this.dateTimeObj[dataKey] = val
+    },
+    showCitySelect(evt) {
+      this._placrType = evt.currentTarget.id
+      this.$invoke('citySelect', 'showCitySelect')
+    },
+    switchPlace() {
+      if (this.form_startPlace && this.form_endPlace) {
+        let placeItem = this.form_startPlace
+        this.form_startPlace = this.form_endPlace
+        this.form_endPlace = placeItem
+      }
+    },
+    switchTabToType1() {
+      this.postType = 1
+    },
+    switchTabToType2() {
+      this.postType = 2
     }
   };
 
-  mixins = [base, input, router];
+  mixins = [base, input];
 }
 </script>
 
 <style lang="scss">
-@import '../styles/zan/panel.scss';
 @import '../styles/zan/btn.scss';
+.zan-field__input {
+  font-size: 18px;
+  line-height: 42px;
+}
+.tabItemList {
+  height: 39px;
+  line-height: 39px;
+  width: 100%;
+  border-bottom: 1px solid #eceff3;
+  background: #fbfbfb;
+}
+.tabItemList .tabItem {
+  width: 50%;
+  height: 38px;
+  color: #888;
+  font-size: 15px;
+  display: inline-block;
+  text-align: center;
+  line-height: 39px;
+}
+.tabItemList .tabItem.on {
+  color: #1ba9ba;
+  border-bottom: 2px solid #1ba9ba;
+}
+
+.searchSection {
+  padding: 0 15px;
+  position: relative;
+}
+
+.searchSection .search-row {
+  position: relative;
+  height: 71px;
+  border-bottom: 1px solid #eceff3;
+}
+
+.searchSection .search-row .label-l,
+.searchSection .search-row .label-r {
+  width: 50%;
+  line-height: 40px;
+  height: 27px;
+  color: #888888;
+}
+
+.searchSection .search-row .label-l,
+.searchSection .search-row .label-r,
+.searchSection .search-row .select-l,
+.searchSection .search-row .select-r {
+  float: left;
+}
+
+.searchSection .search-row .label-r,
+.searchSection .search-row .select-r {
+  text-align: right;
+}
+.searchSection .search-row .swap {
+  position: absolute;
+  left: 50%;
+  top: 26%;
+  color: #b9b9b9;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  transform: translateX(-50%);
+  width: 42px;
+  height: 45px;
+  font-size: 44px;
+  text-align: center;
+  line-height: 42px;
+  z-index: 0;
+}
+.searchSection .search-row .select-l {
+  width: 50%;
+  font-size: 18px;
+  line-height: 42px;
+  height: 42px;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #333;
+}
+.searchSection .search-row .select-r {
+  width: 44%;
+  float: right;
+  font-size: 18px;
+  line-height: 42px;
+  height: 42px;
+  margin-top: 1px;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #333;
+}
+
+.hr {
+  height: 2rpx;
+  margin: 6px 0px;
+}
+
+.hr,
+.h-gap {
+  background-color: $gray-light;
+}
+
+.freightList .freightItem {
+  border-bottom: 15rpx solid #e3e3e3;
+  line-height: 20px;
+  overflow: hidden;
+  padding: 8px 15px;
+}
+
+.freightList .freightItem-field {
+  font-size: 12px;
+  padding-bottom: 6rpx;
+}
+.freightItem .freightItem-field-l{
+  width:70%;
+  float: left;
+}
+
+.freightItem .freightItem-field-r{
+  width:30%;
+  float: right;
+  text-align: right;
+}
+
+.freightList .freightItem-detail {
+  color: $gray-dark;
+  font-size: 11px;
+}
+
 </style>
