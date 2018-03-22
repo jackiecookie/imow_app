@@ -1,0 +1,152 @@
+<template>
+  <block>
+    <repeat for="{{page.list}}" key="index" index="index" item="item">
+      <view class="freightList">
+        <view class="freightItem">
+          <view class="freightItem-field zan-clearfix">
+            <view class="freightItem-field-l">
+              <view class="freightItem-field-l-item">
+                <view class="icon icon-qidian small">
+                </view>
+                {{item.startPlace}}
+              </view>
+              <view class="freightItem-field-l-item">
+                <view class="icon icon-zhongdian small">
+                </view>
+                {{item.endPlace}}
+              </view>
+
+            </view>
+            <view class="freightItem-field-r">
+              <view class="icon icon-lianxiren small">
+              </view>
+              {{item.name}}
+            </view>
+          </view>
+          <view class="freightItem-field zan-clearfix">
+            <view wx:if="{{item.pathWay.length>0}}" class="freightItem-field-l">
+              <view class="icon icon-jingguo small"></view>
+              <repeat for="{{item.pathWay}}" key="pathWayindex" index="pathWayindex" item="pathWayItem">
+                <view class="pathWayItem">{{pathWayItem}}</view>
+              </repeat>
+            </view>
+            <view class="freightItem-field-r">
+              <view class="icon icon-02bohaofill xxxlarge" bindtap="dial" data-mobile="{{item.mobile}}">
+              </view>
+            </view>
+            <view class="freightItem-field-l {{item.pathWay.length>0?'':'nopathWayItem'}}">
+              <view class="icon icon-shijian xsmall">
+              </view>
+              {{item.startDateTime}}
+            </view>
+          </view>
+
+          <view class="hr"></view>
+          <view class="freightItem-field freightItem-detail">
+            [{{item.type===1?'车找货':'货找车'}}] {{item.detail}}
+          </view>
+        </view>
+      </view>
+    </repeat>
+    <loadMore :page.sync="page" />
+  </block>
+</template>
+
+<script>
+import wepy from 'wepy'
+import loadMore from '../components/weui/loadmore'
+export default class freightList extends wepy.component {
+  props = {
+    page: {
+      list: []
+    }
+  };
+  components = {
+    loadMore: loadMore
+  };
+  methods = {
+    dial(evt) {
+      const phoneNumber = evt.currentTarget.dataset.mobile
+      wx.makePhoneCall({
+        phoneNumber: `${phoneNumber}`
+      })
+    }
+  }
+}
+</script>
+
+
+<style lang="scss">
+@import '../styles/zan/common.scss';
+@import '../styles/zan/helper.scss';
+.hr {
+  height: 2rpx;
+  margin: 6px 0px;
+}
+
+.hr,
+.h-gap {
+  background-color: $gray-light;
+}
+
+.freightList .freightItem {
+  border-bottom: 15rpx solid #e3e3e3;
+  line-height: 20px;
+  overflow: hidden;
+  padding: 8px 15px;
+}
+
+.freightList .freightItem-field {
+  font-size: 12px;
+  padding-bottom: 6rpx;
+}
+.freightItem .freightItem-field-l {
+  width: 78%;
+  float: left;
+}
+
+.freightItem .freightItem-field-l .freightItem-field-l-item {
+  width: 50%;
+  float: left;
+}
+
+.freightItem .freightItem-field-r {
+  width: 22%;
+  float: right;
+  text-align: right;
+}
+
+.freightList .freightItem-detail {
+  color: $gray-dark;
+  font-size: 11px;
+}
+
+.icon-qidian {
+  color: $green;
+}
+
+.icon-zhongdian {
+  color: $red;
+}
+
+.icon-lianxiren {
+  color: $orange;
+}
+
+.icon-02bohaofill {
+  color: rgb(223, 117, 47);
+  margin-top: 10px;
+  margin-right: 13px;
+}
+
+.pathWayItem {
+  float: left;
+  margin-right: 10rpx;
+}
+.nopathWayItem {
+  margin-top: 8px;
+}
+.icon-jingguo {
+  float: left;
+}
+</style>

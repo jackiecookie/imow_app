@@ -34,30 +34,7 @@
       <citySelect myCity='true' search='true' horizontal='true' animation='true' show='{{showcity}}' />
     </form>
     <view class="h-gap"></view>
-    <repeat for="{{dataList}}" key="index" index="index" item="item">
-      <view class="freightList">
-        <view class="freightItem">
-          <view class="freightItem-field">
-            <view class="freightItem-field-l">
-              {{item.startDateTime}}
-            </view>
-            <view class="freightItem-field-r">
-              {{item.name}}
-            </view>
-          </view>
-          <view class="freightItem-field">
-            {{item.startPlace}}
-          </view>
-          <view class="freightItem-field">
-            {{item.endPlace}}
-          </view>
-          <view class="hr"></view>
-          <view class="freightItem-field freightItem-detail">
-            {{item.detail}}
-          </view>
-        </view>
-      </view>
-    </repeat>
+    <freightList :page.sync="page" />
   </view>
 </template>
 
@@ -66,7 +43,9 @@ import wepy from 'wepy'
 import zanField from '../components/zan/zan-field'
 import base from '../mixins/base'
 import input from '../mixins/input'
+import pagination from '../mixins/pagination'
 import citySelect from '../components/citySelect'
+import freightList from '../components/freightList'
 import postRequire from '../api/postRequire'
 
 export default class Search extends wepy.page {
@@ -80,12 +59,18 @@ export default class Search extends wepy.page {
     postType: 1,
     form_startPlace: '',
     form_endPlace: '',
-    dataList: []
+    page: {
+      list: []
+    }
   };
   components = {
-    citySelect: citySelect,
-    pwdfield: zanField
+    citySelect,
+    pwdfield: zanField,
+    freightList
   };
+  onLoad() {
+    this.page = postRequire.page()
+  }
   events = {
     citySelected(evt) {
       const selctName = evt
@@ -94,11 +79,19 @@ export default class Search extends wepy.page {
       }
     }
   };
+  params() {
+    return {
+      freightType: this.postType,
+      startPlace: this.form_startPlace,
+      endPlace: this.form_endPlace,
+      startDate: this.dateTimeObj.date,
+      currentUser: false
+    }
+  }
   methods = {
     async formSubmit() {
-      const data = await postRequire.list({ freightType: this.postType })
-      this.dataList = data.list
-      this.$apply()
+      this.page.reset()
+      await this.next()
     },
     dateTimeChange(evt) {
       const val = evt.detail.value
@@ -124,12 +117,17 @@ export default class Search extends wepy.page {
     }
   };
 
-  mixins = [base, input];
+  mixins = [base, input, pagination];
+  config = {
+    navigationBarTitleText: '搜索',
+    enablePullDownRefresh: true
+  };
 }
 </script>
 
 <style lang="scss">
 @import '../styles/zan/btn.scss';
+
 .zan-field__input {
   font-size: 18px;
   line-height: 42px;
@@ -237,31 +235,5 @@ export default class Search extends wepy.page {
   background-color: $gray-light;
 }
 
-.freightList .freightItem {
-  border-bottom: 15rpx solid #e3e3e3;
-  line-height: 20px;
-  overflow: hidden;
-  padding: 8px 15px;
-}
-
-.freightList .freightItem-field {
-  font-size: 12px;
-  padding-bottom: 6rpx;
-}
-.freightItem .freightItem-field-l{
-  width:70%;
-  float: left;
-}
-
-.freightItem .freightItem-field-r{
-  width:30%;
-  float: right;
-  text-align: right;
-}
-
-.freightList .freightItem-detail {
-  color: $gray-dark;
-  font-size: 11px;
-}
 
 </style>

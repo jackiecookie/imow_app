@@ -1,8 +1,8 @@
 <template>
   <view>
-     <SearchBar :placeholder="searchText"></SearchBar>
     <Swiper :list.sync="swipers" height="280"></Swiper>
-    <Category :list.sync="categorys" col="4"></Category>
+     <view class="h-gap"></view>
+      <freightList :page.sync="page" />
   </view>
 </template>
 
@@ -11,8 +11,9 @@ import wepy from 'wepy'
 import { connect } from 'wepy-redux'
 import store from '../store/utils'
 import Swiper from '../components/swiper'
-import Category from '../components/category'
-import SearchBar from '../components/search_bar'
+import freightList from '../components/freightList'
+import postRequire from '../api/postRequire'
+import pagination from '../mixins/pagination'
 
 @connect({
   user: store.get('user')
@@ -20,25 +21,34 @@ import SearchBar from '../components/search_bar'
 export default class Index extends wepy.page {
   components = {
     Swiper: Swiper,
-    Category: Category,
-    SearchBar: SearchBar
+    freightList
   };
   data = {
-    searchText: '搜索内容',
     swipers: [
-      { image: '/images/IMG_1385.JPG', url: '/pages/login' },
-      { image: '/images/IMG_1385.JPG', url: '/pages/login' }
+      { image: 'http://img.imow.cn/Upload/ad/20171220/636493531397984321.jpg', url: '/pages/login' },
+      { image: 'http://img.imow.cn/Upload/ad/20170708/636350905399220018.jpg', url: '/pages/login' }
     ],
-    categorys: [
-      { title: '发布', image: '/images/IMG_1385.JPG' },
-      { title: '查找', image: '/images/IMG_1385.JPG' },
-      { title: '我的', image: '/images/IMG_1385.JPG' },
-      { title: '业', image: '/images/IMG_1385.JPG' }
-    ]
+    page: {
+      list: []
+    }
   };
+  config = {
+    navigationBarTitleText: '阿母工业'
+  };
+  async onLoad() {
+    this.page = postRequire.page()
+    await this.next()
+  }
+  mixins = [pagination];
 }
 </script>
 
 <style lang="scss">
+@import '../styles/zan/common.scss';
+
+.hr,
+.h-gap {
+  background-color: $gray-light;
+}
 
 </style>

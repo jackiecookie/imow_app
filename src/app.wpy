@@ -37,25 +37,33 @@ export default class extends wepy.app {
     window: {
       backgroundTextStyle: 'dark',
       backgroundColor: '#F5F5F5',
-      navigationBarBackgroundColor: '#1296db'
+      navigationBarBackgroundColor: '#d81e06'
     },
     tabBar: {
       color: '#AEADAD',
-      selectedColor: '#049BFF',
+      selectedColor: '#d81e06',
       backgroundColor: '#fff',
       borderStyle: 'black',
       list: [{
         pagePath: 'pages/index',
-        text: '首页'
+        text: '首页',
+        iconPath: '/images/home.png',
+        selectedIconPath: '/images/home_selected.png'
       }, {
         pagePath: 'pages/postType',
-        text: '发布'
+        text: '发布',
+        iconPath: '/images/post.png',
+        selectedIconPath: '/images/post_selected.png'
       }, {
         pagePath: 'pages/search',
-        text: '查找'
+        text: '查找',
+        iconPath: '/images/search.png',
+        selectedIconPath: '/images/search_selected.png'
       }, {
         pagePath: 'pages/index',
-        text: '我的'
+        text: '我的',
+        iconPath: '/images/member.png',
+        selectedIconPath: '/images/member_selected.png'
       }]
     },
     debug: true
@@ -75,6 +83,21 @@ export default class extends wepy.app {
     this.intercept('request', {
       config (p) {
         p.header = this.createAuthHeader()
+        return p
+      },
+
+      success (p) {
+        // 面向切面统一处理网络请求的错误
+        if (p && p.data && p.data.status === 0) {
+          if (p.data.list && p.data.list.length > 0) {
+            p.data = p.data.list
+          }
+        }
+        return p
+      },
+
+      fail (p) {
+        console.log('request fail: ', p)
         return p
       }
     })
