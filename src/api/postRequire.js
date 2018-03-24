@@ -3,20 +3,20 @@ import Page from '../utils/Page'
 
 export default class postRequire extends base {
   static async postData(requireData = {}) {
-    const url = ''
+    const url = `${this.baseUrl}/freight/save`
     const result = await this.put(url, requireData)
     return result
   }
 
   static page () {
-    const url = 'http://mock.eolinker.com/td1pdjj6f0d1910c659b334de1e929b431ab8dc2c0e09fc?uri=/freight/list'
+    const url = `${this.baseUrl}/freight/list`
     return new Page(url, (data) => {
       // data = data.list
     })
   }
 
   static async list(params = {}) {
-    const url = 'http://mock.eolinker.com/td1pdjj6f0d1910c659b334de1e929b431ab8dc2c0e09fc?uri=/freight/list'
+    const url = `${this.baseUrl}/freight/list`
     const result = await this.post(url, params)
     return result
   }

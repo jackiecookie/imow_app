@@ -40,7 +40,7 @@ export default class Pagination {
     this.loading = true
     try {
       Object.assign(param, args)
-      const data = await http.post(this.url, param)
+      const data = await http.get(this.url, param)
       // 底部判断
       if (data === null || data.length < 1) {
         if (this.toClear) {

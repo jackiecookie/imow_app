@@ -1,6 +1,6 @@
 <template>
   <view>
-    <Swiper :list.sync="swipers" height="280"></Swiper>
+    <Swiper :list.sync="swipers" height="400"></Swiper>
      <view class="h-gap"></view>
       <freightList :page.sync="page" />
   </view>

@@ -221,7 +221,8 @@ export default class Post extends wepy.page {
         startTime,
         startPlace: startPlaceForVail,
         endPlace: endPlaceForVail,
-        detail
+        detail,
+        pathWay: this.pathWay
       })
       this.posting = false
     }
