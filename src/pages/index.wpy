@@ -1,45 +1,58 @@
 <template>
   <view>
-    <Swiper :list.sync="swipers" height="400"></Swiper>
-     <view class="h-gap"></view>
-      <freightList :page.sync="page" />
+    <Swiper :list.sync="swipers" height="340"></Swiper>
+    <Category :list.sync="categorys" col="3"></Category>
+    <!-- <view class="h-gap"></view> -->
+    <freightList :page.sync="page" />
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
-import { connect } from 'wepy-redux'
 import store from '../store/utils'
 import Swiper from '../components/swiper'
+import Category from '../components/category'
 import freightList from '../components/freightList'
 import postRequire from '../api/postRequire'
 import pagination from '../mixins/pagination'
+import base from '../mixins/base'
 
-@connect({
-  user: store.get('user')
-})
 export default class Index extends wepy.page {
   components = {
     Swiper: Swiper,
-    freightList
+    freightList,
+    Category
   };
   data = {
+    init: false,
     swipers: [
-      { image: 'http://img.imow.cn/Upload/ad/20171220/636493531397984321.jpg', url: '/pages/login' },
-      { image: 'http://img.imow.cn/Upload/ad/20170708/636350905399220018.jpg', url: '/pages/login' }
+      {
+        image: 'http://img.imow.cn/Upload/ad/20171220/636493531397984321.jpg',
+        url: '/pages/login'
+      },
+      {
+        image: 'http://img.imow.cn/Upload/ad/20170708/636350905399220018.jpg',
+        url: '/pages/login'
+      }
     ],
     page: {
       list: []
-    }
+    },
+    categorys: [
+      { title: '拼物流', image: '/images/IMG_1385.JPG' },
+      { title: '二手车', image: '/images/IMG_1385.JPG' },
+      { title: '行业信息', image: '/images/IMG_1385.JPG' }
+    ]
   };
   config = {
     navigationBarTitleText: '阿母工业'
   };
   async onLoad() {
+    await store.init()
     this.page = postRequire.page()
     await this.next()
   }
-  mixins = [pagination];
+  mixins = [pagination, base];
 }
 </script>
 
@@ -50,5 +63,4 @@ export default class Index extends wepy.page {
 .h-gap {
   background-color: $gray-light;
 }
-
 </style>

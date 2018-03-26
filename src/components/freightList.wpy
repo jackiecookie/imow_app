@@ -15,7 +15,6 @@
                 </view>
                 {{item.endPlace}}
               </view>
-
             </view>
             <view class="freightItem-field-r">
               <view class="icon icon-lianxiren small">
@@ -30,7 +29,7 @@
                 <view class="pathWayItem">{{pathWayItem}}</view>
               </repeat>
             </view>
-            <view class="freightItem-field-r">
+            <view class="freightItem-field-r" wx:if="{{user.imowUser}}">
               <view class="icon icon-02bohaofill xxxlarge" bindtap="dial" data-mobile="{{item.mobile}}">
               </view>
             </view>
@@ -55,10 +54,21 @@
 <script>
 import wepy from 'wepy'
 import loadMore from '../components/weui/loadmore'
+import { connect } from 'wepy-redux'
+import store from '../store/utils'
+
+@connect({
+  user: store.get('user')
+})
+
 export default class freightList extends wepy.component {
   props = {
     page: {
       list: []
+    },
+    currentUser: {
+      type: Boolean,
+      default: false
     }
   };
   components = {

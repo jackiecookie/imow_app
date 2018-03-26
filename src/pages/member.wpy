@@ -1,0 +1,47 @@
+<template>
+  <view>
+    <avatar :info="user" />
+    <view class="h-gap"></view>
+    <freightList :page.sync="page" :currentUser = "currentUser" />
+  </view>
+</template>
+
+
+<script>
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import store from '../store/utils'
+import postRequire from '../api/postRequire'
+import pagination from '../mixins/pagination'
+import avatar from '../components/avatar_panel'
+import freightList from '../components/freightList'
+
+@connect({
+  user: store.get('user')
+})
+export default class Member extends wepy.page {
+  components = {
+    avatar,
+    freightList
+  };
+  data = {
+    page: {
+      list: []
+    },
+    currentUser: true
+  };
+  config = {
+    navigationBarTitleText: '我的'
+  };
+  params() {
+    return {
+      currentUser: this.currentUser
+    }
+  }
+  async onLoad() {
+    this.page = postRequire.page()
+    await this.next()
+  }
+  mixins = [pagination];
+}
+</script>

@@ -32,7 +32,8 @@ export default class extends wepy.app {
       'pages/register',
       'pages/postType',
       'pages/post',
-      'pages/search'
+      'pages/search',
+      'pages/member'
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -60,7 +61,7 @@ export default class extends wepy.app {
         iconPath: '/images/search.png',
         selectedIconPath: '/images/search_selected.png'
       }, {
-        pagePath: 'pages/index',
+        pagePath: 'pages/member',
         text: '我的',
         iconPath: '/images/member.png',
         selectedIconPath: '/images/member_selected.png'
@@ -113,11 +114,10 @@ export default class extends wepy.app {
   }
 
   async onLaunch(param) {
-    // Tips.loading()
-    // this.syncStoreConfig('third_session')
-    // await auth.login()
-    // Tips.loaded()
-
+    Tips.loading()
+    this.syncStoreConfig('third_session')
+    await auth.login()
+    Tips.loaded()
   }
 
   syncStoreConfig(key) {

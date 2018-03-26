@@ -4,7 +4,8 @@ import { handleActions } from 'redux-actions'
 const defaultState = {
   user: {
     thirdSession: null,
-    displayName: '未绑定',
+    nickName: '',
+    avatarUrl: '',
     imowUser: false
   }
 }

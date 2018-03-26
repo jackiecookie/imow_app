@@ -1,6 +1,5 @@
 import base from './base'
 import wepy from 'wepy'
-import store from '../store/utils'
 import WxUtils from '../utils/WxUtils'
 
 /**
@@ -27,8 +26,16 @@ export default class auth extends base {
     if (needLogin) {
       userInfo = await this.doLogin()
     }
-    await this.loginProsses(userInfo)
-    // userInfo && store.updateUser(userInfo)
+    let result = {}
+    result.thirdSession = userInfo.thirdSession
+    result.imowUser = userInfo.imowUser
+    await this.setConfig('third_session', userInfo.thirdSession)
+    if (userInfo.imowUser) {
+      const userInfoRaw = await this.userInfo()
+      result.nickName = userInfoRaw.userInfo.nickName
+      result.avatarUrl = userInfoRaw.userInfo.avatarUrl
+    }
+    return result
   }
 
   /**
@@ -37,7 +44,7 @@ export default class auth extends base {
   static async doLogin() {
     console.info(`[auth] start login `)
     const { code } = await wepy.login()
-    const url = `${this.baseUrl}/auth/userLogin`
+    const url = `${this.baseUrl}/api/wxlogin`
     try {
       const result = await this.post(url, {loginCode: code})
       console.info(`[auth] login complete :${result.thirdSession} `)
@@ -48,11 +55,12 @@ export default class auth extends base {
     }
   }
 
-  static async loginProsses(result) {
-    if (result) {
-      await this.setConfig('third_session', result.thirdSession)
-      store.updateUser(result)
-    }
+   /**
+   * 获取用户信息
+   */
+  static async userInfo() {
+    const rawUser = await wepy.getUserInfo()
+    return rawUser
   }
 
   /**
