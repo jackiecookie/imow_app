@@ -3,7 +3,7 @@
     <view class="zan-panel">
       <logNamefield :options="form_loginName" componentId="form.logNamefield"></logNamefield>
        <view class="zan-cell zan-field">
-          <input type="text" placeholder="验证码" class="zan-field__input zan-cell__bd" placeholder-class="zan-field__placeholder" bindinput="handleZanFieldChange" data-component-id="{{ componentId || '' }}"/>
+          <input type="text" placeholder="验证码" class="zan-field__input zan-cell__bd" placeholder-class="zan-field__placeholder" bindinput="vcodeChange" data-component-id="form.vcode"/>
           <view class="zan-cell__ft">
             <vcode @tap.user="code" />
           </view>
@@ -48,6 +48,10 @@ export default class Register extends wepy.page {
     vcode: vcode
   };
   methods = {
+    vcodeChange(event) {
+      event.componentId = event.currentTarget.dataset.componentId
+      return this.$emit('zanFieldChange', event)
+    },
     async code () {
       let logNameVal = this.input['form.logNamefield']
       const rules = [
@@ -69,6 +73,7 @@ export default class Register extends wepy.page {
     async formSubmit() {
       let logNameVal = this.input['form.logNamefield']
       let pwdVal = this.input['form.pwdfield']
+      let vcode = this.input['form.vcode']
       const rules = [
         {
           value: logNameVal,
@@ -84,13 +89,18 @@ export default class Register extends wepy.page {
           value: pwdVal,
           method: 'required',
           message: '请输入密码'
+        },
+        {
+          value: vcode,
+          method: 'required',
+          message: '请输入验证码'
         }
       ]
       if (!this.check(rules)) {
         return false
       }
-      if (await memberApi.login(logNameVal, pwdVal)) {
-        this.routeToIndex()
+      if (await memberApi.register(logNameVal, pwdVal)) {
+        this.routeToMember()
       }
     }
   };

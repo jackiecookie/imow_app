@@ -60,7 +60,7 @@ export default class Login extends wepy.page {
         return false
       }
       if (await memberApi.login(logNameVal, pwdVal)) {
-        this.navigateBack()
+        this.routeToMember()
       }
     }
   };

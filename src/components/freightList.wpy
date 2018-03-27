@@ -29,7 +29,7 @@
                 <view class="pathWayItem">{{pathWayItem}}</view>
               </repeat>
             </view>
-            <view class="freightItem-field-r" wx:if="{{user.imowUser}}">
+            <view class="freightItem-field-r">
               <view class="icon icon-02bohaofill xxxlarge" bindtap="dial" data-mobile="{{item.mobile}}">
               </view>
             </view>
@@ -48,6 +48,7 @@
       </view>
     </repeat>
     <loadMore :page.sync="page" />
+    <zanDialog  wx:if="{{!currentUser && !user.imowUser}}"/>
   </block>
 </template>
 
@@ -56,6 +57,7 @@ import wepy from 'wepy'
 import loadMore from '../components/weui/loadmore'
 import { connect } from 'wepy-redux'
 import store from '../store/utils'
+import zanDialog from '../components/zan/zan-dialog'
 
 @connect({
   user: store.get('user')
@@ -72,14 +74,36 @@ export default class freightList extends wepy.component {
     }
   };
   components = {
-    loadMore: loadMore
+    loadMore: loadMore,
+    zanDialog: zanDialog
   };
   methods = {
     dial(evt) {
-      const phoneNumber = evt.currentTarget.dataset.mobile
-      wx.makePhoneCall({
-        phoneNumber: `${phoneNumber}`
-      })
+      if (this.user.imowUser) {
+        const phoneNumber = evt.currentTarget.dataset.mobile
+        wx.makePhoneCall({
+          phoneNumber: `${phoneNumber}`
+        })
+      } else {
+        this.$invoke('zanDialog', 'showZanDialog', {
+          title: '未登录',
+          content: '您现在未登录,登录后可拨打电话',
+          buttons: [
+            {
+              text: '去登录',
+              color: 'red',
+              type: 'login'
+            },
+            {
+              text: '取消',
+              type: 'cancel'
+            }
+          ]
+        })
+        .then(({ type }) => {
+          type === 'login' && wx.navigateTo({url: `/pages/login`})
+        })
+      }
     }
   }
 }

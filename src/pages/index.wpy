@@ -27,12 +27,10 @@ export default class Index extends wepy.page {
     init: false,
     swipers: [
       {
-        image: 'http://img.imow.cn/Upload/ad/20171220/636493531397984321.jpg',
-        url: '/pages/login'
+        image: 'http://img.imow.cn/Upload/ad/20171220/636493531397984321.jpg'
       },
       {
-        image: 'http://img.imow.cn/Upload/ad/20170708/636350905399220018.jpg',
-        url: '/pages/login'
+        image: 'http://img.imow.cn/Upload/ad/20170708/636350905399220018.jpg'
       }
     ],
     page: {

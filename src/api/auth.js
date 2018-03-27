@@ -29,13 +29,15 @@ export default class auth extends base {
     let result = {}
     result.thirdSession = userInfo.thirdSession
     result.imowUser = userInfo.imowUser
-    await this.setConfig('third_session', userInfo.thirdSession)
-    if (userInfo.imowUser) {
-      const userInfoRaw = await this.userInfo()
-      result.nickName = userInfoRaw.userInfo.nickName
-      result.avatarUrl = userInfoRaw.userInfo.avatarUrl
-    }
+    await this.setSession(userInfo.thirdSession)
+    const userInfoRaw = await this.userInfo()
+    result.nickName = userInfoRaw.userInfo.nickName
+    result.avatarUrl = userInfoRaw.userInfo.avatarUrl
     return result
+  }
+
+  static async setSession(thirdSession) {
+    return await this.setConfig('third_session', thirdSession)
   }
 
   /**

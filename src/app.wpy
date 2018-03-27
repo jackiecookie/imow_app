@@ -89,9 +89,13 @@ export default class extends wepy.app {
 
       success (p) {
         // 面向切面统一处理网络请求的错误
-        if (p && p.data && p.data.status === 0) {
-          if (p.data.list && p.data.list.length > 0) {
-            p.data = p.data.list
+        if (p && p.data) {
+          if (p.data.status === 0) {
+            if (p.data.list && p.data.list.length > 0) {
+              p.data = p.data.list
+            }
+          } else if (p.data.status === 88) {
+            Tips.error((p.data.errorMag && p.data.errorMag) || '失败,请重试')
           }
         }
         return p

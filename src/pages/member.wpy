@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view wx:if="{{user.imowUser}}">
     <avatar :info="user" />
     <view class="h-gap"></view>
     <freightList :page.sync="page" :currentUser = "currentUser" />
@@ -15,6 +15,7 @@ import postRequire from '../api/postRequire'
 import pagination from '../mixins/pagination'
 import avatar from '../components/avatar_panel'
 import freightList from '../components/freightList'
+import router from '../mixins/router'
 
 @connect({
   user: store.get('user')
@@ -39,9 +40,14 @@ export default class Member extends wepy.page {
     }
   }
   async onLoad() {
-    this.page = postRequire.page()
-    await this.next()
+    await store.init()
+    if (this.user.imowUser) {
+      this.page = postRequire.page()
+      await this.next()
+    } else {
+      this.redirectToLogin()
+    }
   }
-  mixins = [pagination];
+  mixins = [pagination, router];
 }
 </script>
