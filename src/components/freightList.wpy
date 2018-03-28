@@ -35,8 +35,8 @@
                <view class="freightItem-field-Contentitem">
                 {{item.name}}
               </view>
-              <view class="freightItem-field-Contentitem bohaofill">
-                <view class="icon icon-02bohaofill xlarge" bindtap="dial" data-mobile="{{item.mobile}}">
+              <view class="freightItem-field-Contentitem {{item.pathWay.length===0?'mt20':'mt35'}}">
+                <view class="icon icon-02bohaofill xxlarge" bindtap="dial" data-mobile="{{item.mobile}}">
                 </view>
               </view>
             </view>
@@ -154,8 +154,15 @@ export default class freightList extends wepy.component {
    text-align: center
 }
 
-.freightItem .freightItem-field-Contentitem.bohaofill{
-  margin-top: 30rpx;
+
+
+
+.mt20{
+   margin-top: 20rpx;
+}
+
+.mt35{
+  margin-top: 35rpx;
 }
 
 
