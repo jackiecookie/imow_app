@@ -5,7 +5,8 @@ import v from '../utils/Validate'
 import Tip from '../utils/Tips'
 export default class input extends wepy.mixin {
   data = {
-    input: {}
+    input: {},
+    posting: false
   };
   // 卸载页面
   onUnload() {

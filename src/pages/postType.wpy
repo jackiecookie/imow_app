@@ -1,23 +1,21 @@
 <template>
   <view class="zan-btns z-p">
-    <view class="z-c">
-      <view class="zan-panel-title">选择你要发布的类目</view>
-      <button class="zan-btn y-btn" bindtap="routeToFindTruckPost">
-        <view class="icon-wrap">
-          <view class="icon icon-cargo xxlarge" style="color: #ff4343;">
-          </view>
-          <view class="panel-title inline">我有货</view>
+    <view class="zan-panel-title">选择你要发布的类目</view>
+    <button class="zan-btn y-btn" bindtap="routeToLogisticsTypePost">
+      <view class="icon-wrap">
+        <view class="icon icon-wuliukuaidi xxlarge" style="color: #ff4343;">
         </view>
-      </button>
-      <button class="zan-btn y-btn" bindtap="routeToFindCargoPost">
-        <view class="icon-wrap">
-          <view class="icon icon-huoche xxlarge" style="color: #ff4343;">
-          </view>
-          <view class="panel-title inline">我有车</view>
+        <view class="panel-title inline">我要拼物流</view>
+      </view>
+    </button>
+    <button class="zan-btn y-btn" bindtap="routeToFindCargoPost">
+      <view class="icon-wrap">
+        <view class="icon icon-wenzhang xxlarge" style="color: #ff4343;">
         </view>
-      </button>
-      <view></view>
-    </view>
+        <view class="panel-title inline">我想要爆料</view>
+      </view>
+    </button>
+    <view></view>
   </view>
 
 </template>
@@ -39,18 +37,12 @@ export default class PostType extends wepy.page {
   content: '';
   display: block;
 }
-.z-c {
-  position: relative;
-  top: 44%;
-  transform: translateY(-50%);
-}
+
 .y-btn {
   border-radius: 20px;
-  width: 44%;
-  height: 130px;
-  display: inline-block;
+  height: 110px;
   text-align: center;
-  line-height: 130px;
+  line-height: 110px;
   margin: 10px;
 }
 .y-btn-l {

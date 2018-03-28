@@ -3,43 +3,44 @@
     <repeat for="{{page.list}}" key="index" index="index" item="item">
       <view class="freightList">
         <view class="freightItem">
-          <view class="freightItem-field zan-clearfix">
-            <view class="freightItem-field-l">
-              <view class="freightItem-field-l-item">
+          <view class="zan-clearfix">
+            <view class="freightItem-field freightItem-field-l">
+              <view class="freightItem-field-item">
+                <view class="icon icon-shijian xsmall">
+                </view>
+                <text class="freightItem-field-item-text">时间 </text>
+                {{item.startDateTime}}
+              </view>
+              <view class="freightItem-field-item">
                 <view class="icon icon-qidian small">
                 </view>
+                 <text class="freightItem-field-item-text">起点 </text>
                 {{item.startPlace}}
               </view>
-              <view class="freightItem-field-l-item">
+              <view wx:if="{{item.pathWay.length>0}}" class="freightItem-field-item zan-clearfix">
+                <view class="icon icon-jingguo small"></view>
+                 <text class="freightItem-field-item-text pathWayItem">途径 </text>
+                <repeat for="{{item.pathWay}}" key="pathWayindex" index="pathWayindex" item="pathWayItem">
+                  <view class="pathWayItem">{{pathWayItem}} <text wx:if="{{pathWayindex < item.pathWay.length-1 }}">-></text></view>
+                </repeat>
+              </view>
+              <view class="freightItem-field-item">
                 <view class="icon icon-zhongdian small">
                 </view>
+                 <text class="freightItem-field-item-text">终点 </text>
                 {{item.endPlace}}
               </view>
             </view>
-            <view class="freightItem-field-r">
-              <view class="icon icon-lianxiren small">
+            <view class="freightItem-field freightItem-field-r">
+               <view class="freightItem-field-Contentitem">
+                {{item.name}}
               </view>
-              {{item.name}}
+              <view class="freightItem-field-Contentitem bohaofill">
+                <view class="icon icon-02bohaofill xlarge" bindtap="dial" data-mobile="{{item.mobile}}">
+                </view>
+              </view>
             </view>
           </view>
-          <view class="freightItem-field zan-clearfix">
-            <view wx:if="{{item.pathWay.length>0}}" class="freightItem-field-l">
-              <view class="icon icon-jingguo small"></view>
-              <repeat for="{{item.pathWay}}" key="pathWayindex" index="pathWayindex" item="pathWayItem">
-                <view class="pathWayItem">{{pathWayItem}}</view>
-              </repeat>
-            </view>
-            <view class="freightItem-field-r">
-              <view class="icon icon-02bohaofill xxxlarge" bindtap="dial" data-mobile="{{item.mobile}}">
-              </view>
-            </view>
-            <view class="freightItem-field-l {{item.pathWay.length>0?'':'nopathWayItem'}}">
-              <view class="icon icon-shijian xsmall">
-              </view>
-              {{item.startDateTime}}
-            </view>
-          </view>
-
           <view class="hr"></view>
           <view class="freightItem-field freightItem-detail">
             [{{item.type===1?'车找货':'货找车'}}] {{item.detail}}
@@ -48,7 +49,7 @@
       </view>
     </repeat>
     <loadMore :page.sync="page" />
-    <zanDialog  wx:if="{{!currentUser && !user.imowUser}}"/>
+    <zanDialog wx:if="{{!currentUser && !user.imowUser}}" />
   </block>
 </template>
 
@@ -62,7 +63,6 @@ import zanDialog from '../components/zan/zan-dialog'
 @connect({
   user: store.get('user')
 })
-
 export default class freightList extends wepy.component {
   props = {
     page: {
@@ -99,13 +99,12 @@ export default class freightList extends wepy.component {
               type: 'cancel'
             }
           ]
-        })
-        .then(({ type }) => {
-          type === 'login' && wx.navigateTo({url: `/pages/login`})
+        }).then(({ type }) => {
+          type === 'login' && wx.navigateTo({ url: `/pages/login` })
         })
       }
     }
-  }
+  };
 }
 </script>
 
@@ -113,6 +112,11 @@ export default class freightList extends wepy.component {
 <style lang="scss">
 @import '../styles/zan/common.scss';
 @import '../styles/zan/helper.scss';
+
+.font-size{
+  font-size: 12px;
+}
+
 .hr {
   height: 2rpx;
   margin: 6px 0px;
@@ -131,12 +135,33 @@ export default class freightList extends wepy.component {
 }
 
 .freightList .freightItem-field {
-  font-size: 12px;
+  @extend .font-size;
   padding-bottom: 6rpx;
 }
 .freightItem .freightItem-field-l {
-  width: 78%;
+  width: 76%;
   float: left;
+}
+
+.freightItem .freightItem-field-item{
+  @extend .font-size;
+}
+
+.freightItem .freightItem-field-Contentitem{
+  font-size: 15px;
+   font-weight:bold;
+   padding-right: 5rpx;
+   text-align: center
+}
+
+.freightItem .freightItem-field-Contentitem.bohaofill{
+  margin-top: 30rpx;
+}
+
+
+.freightItem .freightItem-field-item-text{
+  @extend .font-size;
+  color: $gray-dark;
 }
 
 .freightItem .freightItem-field-l .freightItem-field-l-item {
@@ -148,11 +173,18 @@ export default class freightList extends wepy.component {
   width: 22%;
   float: right;
   text-align: right;
+  
+  margin-top: 10rpx;
+  
 }
+
+
+
 
 .freightList .freightItem-detail {
   color: $gray-dark;
-  font-size: 11px;
+  font-size: 10px;
+  margin-top:5rpx
 }
 
 .icon-qidian {
@@ -169,13 +201,13 @@ export default class freightList extends wepy.component {
 
 .icon-02bohaofill {
   color: rgb(223, 117, 47);
-  margin-top: 10px;
-  margin-right: 13px;
+  // margin-right: 7rpx;
 }
 
 .pathWayItem {
   float: left;
   margin-right: 10rpx;
+  @extend .font-size;
 }
 .nopathWayItem {
   margin-top: 8px;

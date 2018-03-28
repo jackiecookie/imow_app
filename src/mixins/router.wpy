@@ -48,15 +48,19 @@ export default class router extends wepy.mixin {
     wx.redirectTo({url: `/pages/login`})
   }
 
+  routeToLogisticsTypePost() {
+    wx.navigateTo({url: `/pages/postLogisticsType`})
+  }
+
   routeToFindCargoPost() {
     // $switch不允许携带参数到下一个页面所以设置一个全局的变量来传值
-    wepy.$instance.globalData.pageParams['pages/post'] = {postType: 1}
-    wx.navigateTo({url: `/pages/post`})
+    wepy.$instance.globalData.pageParams['pages/postLogistics'] = {postType: 1}
+    wx.navigateTo({url: `/pages/postLogistics`})
   }
 
   routeToFindTruckPost() {
-    wepy.$instance.globalData.pageParams['pages/post'] = {postType: 2}
-    wx.navigateTo({url: `/pages/post`})
+    wepy.$instance.globalData.pageParams['pages/postLogistics'] = {postType: 2}
+    wx.navigateTo({url: `/pages/postLogistics`})
   }
 
   methods = {
@@ -78,9 +82,13 @@ export default class router extends wepy.mixin {
     routeToFindTruckPost() {
       this.routeToFindTruckPost()
     },
+    routeToLogisticsTypePost() {
+      this.routeToLogisticsTypePost()
+    },
     redirectToLogin() {
       this.redirectToLogin()
     }
+
   };
   events = {};
 }

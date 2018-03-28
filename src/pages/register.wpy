@@ -99,8 +99,12 @@ export default class Register extends wepy.page {
       if (!this.check(rules)) {
         return false
       }
-      if (await memberApi.register(logNameVal, pwdVal)) {
-        this.routeToMember()
+      if (!this.posting) {
+        this.posting = true
+        if (await memberApi.register(logNameVal, pwdVal)) {
+          this.routeToMember()
+        }
+        this.posting = false
       }
     }
   };

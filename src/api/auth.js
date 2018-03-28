@@ -61,8 +61,20 @@ export default class auth extends base {
    * 获取用户信息
    */
   static async userInfo() {
-    const rawUser = await wepy.getUserInfo()
-    return rawUser
+    try {
+      const rawUser = await wepy.getUserInfo()
+      return rawUser
+    } catch (error) {
+      // 权限被拒绝默认名称和头像
+      if (error && error.errMsg && error.errMsg === 'getUserInfo:fail auth deny') {
+        return {
+          userInfo: {
+            nickName: '阿母用户',
+            avatarUrl: '头像'
+          }
+        }
+      }
+    }
   }
 
   /**

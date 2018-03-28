@@ -18,7 +18,7 @@ import 'wepy-async-function'
 
 import { setStore } from 'wepy-redux'
 import configStore from './store'
-import auth from './api/auth'
+import authApi from './api/auth'
 import Tips from './utils/Tips'
 
 const store = configStore()
@@ -30,8 +30,9 @@ export default class extends wepy.app {
       'pages/index',
       'pages/login',
       'pages/register',
+      'pages/postLogisticsType',
       'pages/postType',
-      'pages/post',
+      'pages/postLogistics',
       'pages/search',
       'pages/member'
     ],
@@ -55,11 +56,6 @@ export default class extends wepy.app {
         text: '发布',
         iconPath: '/images/post.png',
         selectedIconPath: '/images/post_selected.png'
-      }, {
-        pagePath: 'pages/search',
-        text: '查找',
-        iconPath: '/images/search.png',
-        selectedIconPath: '/images/search_selected.png'
       }, {
         pagePath: 'pages/member',
         text: '我的',
@@ -87,8 +83,8 @@ export default class extends wepy.app {
         return p
       },
 
-      success (p) {
-        // 面向切面统一处理网络请求的错误
+      async success (p) {
+        // 切面统一处理网络请求的错误
         if (p && p.data) {
           if (p.data.status === 0) {
             if (p.data.list && p.data.list.length > 0) {
@@ -96,6 +92,14 @@ export default class extends wepy.app {
             }
           } else if (p.data.status === 88) {
             Tips.error((p.data.errorMag && p.data.errorMag) || '失败,请重试')
+            // 未登录
+          } else if (p.data.status === 110) {
+            const loginResult = await authApi.login()
+            if (loginResult.imowUser) {
+              Tips.error('服务器发生了一个错误,已修复,请重新提交!')
+            } else {
+              Tips.error('你没有绑定阿母账号,请前往登录页面登录!')
+            }
           }
         }
         return p
@@ -109,7 +113,7 @@ export default class extends wepy.app {
   }
 
   createAuthHeader () {
-    const thridSession = auth.getConfig('third_session')
+    const thridSession = authApi.getConfig('third_session')
     const header = {}
     if (thridSession) {
       header['third_session'] = thridSession
@@ -118,10 +122,7 @@ export default class extends wepy.app {
   }
 
   async onLaunch(param) {
-    Tips.loading()
     this.syncStoreConfig('third_session')
-    await auth.login()
-    Tips.loaded()
   }
 
   syncStoreConfig(key) {

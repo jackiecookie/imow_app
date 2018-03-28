@@ -22,8 +22,8 @@ export default class member extends base {
     }
   }
 
-/**
-   * 登录
+  /**
+   * 注册
    */
   static async register(logNameVal, pwdVal, vcode) {
     const { code } = await wepy.login()
@@ -40,7 +40,7 @@ export default class member extends base {
     }
   }
 
-  async setLoginTag(user) {
+  static async setLoginTag(user) {
     await auth.setSession(user.thirdSession)
     await store.updateUser({
       thirdSession: user.thirdSession,

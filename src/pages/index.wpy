@@ -37,7 +37,7 @@ export default class Index extends wepy.page {
       list: []
     },
     categorys: [
-      { title: '拼物流', image: '/images/IMG_1385.JPG' },
+      { title: '拼物流', image: '/images/IMG_1385.JPG', url: 'search' },
       { title: '二手车', image: '/images/IMG_1385.JPG' },
       { title: '行业信息', image: '/images/IMG_1385.JPG' }
     ]
@@ -46,9 +46,9 @@ export default class Index extends wepy.page {
     navigationBarTitleText: '阿母工业'
   };
   async onLoad() {
-    await store.init()
     this.page = postRequire.page()
     await this.next()
+    await store.init()
   }
   mixins = [pagination, base];
 }

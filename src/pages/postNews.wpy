@@ -82,14 +82,13 @@ import base from '../mixins/base'
 import input from '../mixins/input'
 import postRequire from '../api/postRequire'
 
-export default class Post extends wepy.page {
+export default class PostNews extends wepy.page {
   onShow() {
     base.injectionParas.call(this)
   }
   data = {
     postType: 1,
     showcity: true,
-    posting: false,
     hidePlaceholder: true,
     dateTimeObj: {
       dataFormat: 'YYYY-MM-DD',
@@ -213,18 +212,20 @@ export default class Post extends wepy.page {
       if (!this.check(rules)) {
         return false
       }
-      this.posting = true
-      const result = await postRequire.postData({
-        name,
-        mobile,
-        startDate,
-        startTime,
-        startPlace: startPlaceForVail,
-        endPlace: endPlaceForVail,
-        detail,
-        pathWay: this.pathWay
-      })
-      this.posting = false
+      if (!this.posting) {
+        this.posting = true
+        const result = await postRequire.postData({
+          name,
+          mobile,
+          startDate,
+          startTime,
+          startPlace: startPlaceForVail,
+          endPlace: endPlaceForVail,
+          detail,
+          pathWay: this.pathWay
+        })
+        this.posting = false
+      }
     }
   };
 

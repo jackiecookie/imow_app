@@ -1,0 +1,244 @@
+<template>
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <view class="zan-panel-title">要求描述</view>
+    <view class="zan-panel" wx:if="{{ hidePlaceholder }}">
+      <detailField :options="form_detail" componentId="form_detail"></detailField>
+    </view>
+    <view class="zan-panel-title">信息</view>
+    <view class="zan-panel">
+
+      <!-- 起始地点  -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">起始地</view>
+        <view class="picker zan-field__input" bindtap='showCitySelect' id='form_startPlace'>
+          {{form_startPlace}}
+        </view>
+      </view>
+      <!--目标地点 -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">目的地</view>
+        <view class="picker zan-field__input" bindtap='showCitySelect' id='form_endPlace'>
+          {{form_endPlace}}
+        </view>
+      </view>
+      <!--途径地 -->
+      <block wx:if="{{postType==1}}" wx:for="{{pathWay}}" wx:key="tjkey">
+        <view class="zan-cell zan-field">
+          <view class="zan-cell__hd zan-field__title">途径地</view>
+          <view class="picker zan-field__input" bindtap='showCitySelect' id='pathWay-{{index}}'>
+            {{pathWay[index]}}
+          </view>
+          <view class="zan-cell__ft">
+            <view wx:if="{{index==pathWay.length-1}}" class="zan-icon zan-icon-add cur-Icon" bindtap="addPathway"></view>
+            <view wx:if="{{index>0}}" style="padding-left:6rpx" data-index="{{index}}" class="zan-icon zan-icon-close cur-Icon" bindtap="removePathway"></view>
+          </view>
+        </view>
+      </block>
+
+      <!-- ------------------------ 地点选择 结束 ---------------------------- -->
+
+      <!-- ------------------------ 出发日期 ---------------------------- -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">出发日期</view>
+        <picker mode="date" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.dataFormat }}" bindchange="dateTimeChange" name="startDate">
+          <view class="picker zan-field__input">
+            {{ dateTimeObj.date }}
+          </view>
+        </picker>
+      </view>
+      <!-- ------------------------ 出发日期 ---------------------------- -->
+
+      <!-- ------------------------ 出发时间 ---------------------------- -->
+      <view class="zan-cell zan-field">
+        <view class="zan-cell__hd zan-field__title">出发时间</view>
+        <picker mode="time" class="zan-field__input zan-cell__bd" value="{{ dateTimeObj.timeFormat }}" bindchange="dateTimeChange" name="startTime">
+          <view class="picker zan-field__input">
+            {{ dateTimeObj.time }}
+          </view>
+        </picker>
+      </view>
+      <!-- ------------------------ 出发时间 ---------------------------- -->
+    </view>
+
+    <view class="zan-panel-title">联系人</view>
+    <view class="zan-panel">
+      <nameField :options="form_name" componentId="form_name"></nameField>
+      <mobileField :options="form_mobile" componentId="form_mobile"></mobileField>
+    </view>
+
+    <view class="zan-btns">
+      <button class="zan-btn zan-btn--danger {{ posting?'zan-btn--loading':'' }}" formType="submit">立即发布</button>
+    </view>
+    <citySelect myCity='true' search='true' horizontal='true' animation='true' show='{{showcity}}' />
+  </form>
+
+</template>
+
+<script>
+import wepy from 'wepy'
+import zanField from '../components/zan/zan-field'
+import citySelect from '../components/citySelect'
+import base from '../mixins/base'
+import input from '../mixins/input'
+import postRequire from '../api/postRequire'
+
+export default class PostLogistics extends wepy.page {
+  onShow() {
+    base.injectionParas.call(this)
+  }
+  data = {
+    postType: 1,
+    showcity: true,
+    hidePlaceholder: true,
+    dateTimeObj: {
+      dataFormat: 'YYYY-MM-DD',
+      timeFormat: 'hh:mm',
+      date: '',
+      time: ''
+    },
+    form_detail: {
+      name: 'detail',
+      placeholder: '请详细描述你的要求如:货车箱数...',
+      type: 'textarea'
+    },
+    form_startPlace: '',
+    form_endPlace: '',
+    pathWay: [''],
+    form_name: {
+      name: 'name',
+      title: '姓名'
+    },
+    form_mobile: {
+      name: 'mobile',
+      title: '手机号码',
+      inputType: 'number'
+    }
+  };
+  components = {
+    detailField: zanField,
+    nameField: zanField,
+    mobileField: zanField,
+    citySelect: citySelect
+  };
+  events = {
+    citySelected(evt) {
+      const selctName = evt
+      if (selctName) {
+        if (this._placrType.indexOf('-') > -1) {
+          const _placrTypeArry = this._placrType.split('-')
+          this[_placrTypeArry[0]][_placrTypeArry[1]] = selctName
+        } else {
+          this[this._placrType] = selctName
+        }
+      }
+      this.hidePlaceholder = true
+    }
+  };
+
+  methods = {
+    /**
+     * 新增途径点
+     */
+    addPathway() {
+      this.pathWay.push('')
+    },
+    /**
+     * 删除途径点
+     */
+    removePathway(evt) {
+      const currentIndex = evt.currentTarget.dataset.index
+      this.pathWay.splice(currentIndex, 1)
+    },
+    dateTimeChange(evt) {
+      const val = evt.detail.value
+      const isTime = val.indexOf(':') > -1
+      const dataKey = isTime ? 'time' : 'date'
+      this.dateTimeObj[dataKey] = val
+    },
+    showCitySelect(evt) {
+      this._placrType = evt.currentTarget.id
+      // BUG:placehoder没办法被遮住 只能暂时先隐藏
+      this.hidePlaceholder = false
+      this.$invoke('citySelect', 'showCitySelect')
+    },
+    /**
+     * 提交
+     */
+    async formSubmit() {
+      const name = this.input['form_name']
+      const mobile = this.input['form_mobile']
+      const detail = this.input['form_detail']
+      const startDate = this.dateTimeObj.date
+      const startTime = this.dateTimeObj.time
+      const startPlaceForVail = this.form_startPlace
+      const endPlaceForVail = this.form_endPlace
+      const rules = [
+        {
+          value: name,
+          method: 'required',
+          message: '输入名称!'
+        },
+        {
+          value: mobile,
+          method: 'required',
+          message: '输入手机号码!'
+        },
+        {
+          value: mobile,
+          method: 'tel',
+          message: '手机号码不正确!'
+        },
+        {
+          value: startDate,
+          method: 'required',
+          message: '输入出运日期!'
+        },
+        {
+          value: startTime,
+          method: 'required',
+          message: '输入出运时间!'
+        },
+        {
+          value: startPlaceForVail,
+          method: 'required',
+          message: '输入始发地!'
+        },
+        {
+          value: endPlaceForVail,
+          method: 'required',
+          message: '输入目的地!'
+        }
+      ]
+      if (!this.check(rules)) {
+        return false
+      }
+      if (!this.posting) {
+        this.posting = true
+        const result = await postRequire.postData({
+          name,
+          mobile,
+          startDate,
+          startTime,
+          startPlace: startPlaceForVail,
+          endPlace: endPlaceForVail,
+          detail,
+          pathWay: this.pathWay
+        })
+        this.posting = false
+      }
+    }
+  };
+
+  mixins = [base, input];
+}
+</script>
+
+<style lang="scss">
+@import '../styles/zan/panel.scss';
+@import '../styles/zan/btn.scss';
+@import '../styles/zan/icon.scss';
+.cur-Icon {
+  color: $blue;
+  font-size: 42rpx;
+}
+</style>

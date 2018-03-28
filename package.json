@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "wepy build --watch",
     "build": "cross-env NODE_ENV=production wepy build --no-cache",
-    "dev:web": "wepy build --output web",
+    "dev:web": "wepy build --output web --platform wechat",
     "clean": "find ./dist -maxdepth 1 -not -name 'project.config.json' -not -name 'dist' | xargs rm -rf",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,7 +23,8 @@
     "wepy": "^1.7.1",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.2",
-    "wepy-redux": "^1.5.3"
+    "wepy-redux": "^1.5.3",
+    "wepy-web": "^1.5.10"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",

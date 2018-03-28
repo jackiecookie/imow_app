@@ -4,7 +4,7 @@
       <logNamefield :options="form_loginName" componentId="form.logNamefield"></logNamefield>
       <pwdfield :options="form_password" componentId="form.pwdfield"></pwdfield>
       <view class="zan-btns">
-        <button class="zan-btn zan-btn--danger" formType="submit">登陆并绑定微信号</button>
+        <button class="zan-btn zan-btn--danger {{ posting?'zan-btn--loading':'' }}" formType="submit">登陆并绑定微信号</button>
       </view>
       <view class="register_title" bindtap="routeToRegister">我没阿母账号,我要注册</view>
     </view>
@@ -59,8 +59,12 @@ export default class Login extends wepy.page {
       if (!this.check(rules)) {
         return false
       }
-      if (await memberApi.login(logNameVal, pwdVal)) {
-        this.routeToMember()
+      if (!this.posting) {
+        this.posting = true
+        if (await memberApi.login(logNameVal, pwdVal)) {
+          this.routeToMember()
+        }
+        this.posting = false
       }
     }
   };
