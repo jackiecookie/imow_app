@@ -58,10 +58,9 @@ export default class category extends wepy.component {
 .category {
   position: relative;
   width: 100%;
-  border-bottom: 20rpx solid $gray-light;
+  border-bottom: 10rpx solid $shit-gary;
 
   font-size: 14px;
-  background: #fff;
 }
 .category-item {
   float: left;

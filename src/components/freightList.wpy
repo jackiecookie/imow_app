@@ -127,11 +127,19 @@ export default class freightList extends wepy.component {
   background-color: $gray-light;
 }
 
+.freightList{
+  background:$white;
+  margin: 0px 23rpx;
+  border-radius:16rpx;
+  margin-top: 32rpx
+}
+
 .freightList .freightItem {
-  border-bottom: 15rpx solid #e3e3e3;
+  
   line-height: 20px;
   overflow: hidden;
   padding: 8px 15px;
+  margin-bottom: 15rpx
 }
 
 .freightList .freightItem-field {

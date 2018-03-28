@@ -1,8 +1,12 @@
 <template>
-  <view>
-    <Swiper :list.sync="swipers" height="340"></Swiper>
+  <view class="index-container">
+    <Swiper :list.sync="swipers" height="500"></Swiper>
     <Category :list.sync="categorys" col="3"></Category>
     <!-- <view class="h-gap"></view> -->
+    <view class="btn-warp zan-clearfix">
+      <button class="zan-btn">我有车</button>
+      <button class="zan-btn">我有货</button>
+    </view>
     <freightList :page.sync="page" />
   </view>
 </template>
@@ -38,8 +42,8 @@ export default class Index extends wepy.page {
     },
     categorys: [
       { title: '拼物流', image: '/images/IMG_1385.JPG', url: 'search' },
-      { title: '二手车', image: '/images/IMG_1385.JPG' },
-      { title: '行业信息', image: '/images/IMG_1385.JPG' }
+      { title: '二手车买卖', image: '/images/IMG_1385.JPG' },
+      { title: '行业动态', image: '/images/IMG_1385.JPG' }
     ]
   };
   config = {
@@ -56,9 +60,37 @@ export default class Index extends wepy.page {
 
 <style lang="scss">
 @import '../styles/zan/common.scss';
-
-.hr,
-.h-gap {
-  background-color: $gray-light;
+@import '../styles/zan/btn.scss';
+@import '../styles/zan/helper.scss';
+.btn-warp{
+  border-radius: 50%;
+  width: 515rpx;
+  background: $white;
+  margin-left: auto;
+  margin-right: auto;
+  .zan-btn{
+    float: left;
+    width: 50%;
+    margin:0px;
+    padding: 0px;
+    border: 0px;
+    height: 65rpx;
+    line-height: 65rpx;
+    &:first-child{
+        border-radius:25px 0px 0px 25px;
+    }
+   &:last-child{
+    border-radius:0px 25px 25px 0px;
+    }
+  }
+  .zan-btn:after{
+    border-width: 0px
+  }
 }
+
+.index-container{
+  background:$shit-gary
+}
+
+
 </style>
